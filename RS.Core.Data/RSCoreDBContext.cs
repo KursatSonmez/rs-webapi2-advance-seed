@@ -9,6 +9,7 @@ namespace RS.Core.Data
         public RSCoreDBContext()
             : base("name=RSCoreDBContext")
         {
+            Configuration.LazyLoadingEnabled = false;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
