@@ -26,7 +26,7 @@ namespace RS.Core.Service
             repositories.Add(typeof(T), repository);
             return repository;
         }
-        public virtual async Task<int> SaveChanges()
+        public virtual async Task<int> SaveChangesAsync()
         {
             return await con.SaveChangesAsync();
         }
