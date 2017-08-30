@@ -9,12 +9,12 @@ using RS.Core.Lib;
 using RS.Core.Domain;
 using RS.Core.Service.DTOs;
 using System.ComponentModel;
+using System.Data.Entity;
 
 namespace RS.Core.Service
 {
     ///ToDo:
-    /// asenkron test
-    ///Get by id async yapılacak.
+    /// checkAutorize read in webconfig
     /// Itableentityler model degıl entity olacak.
     ///Createby ve updateby generic type alacak (Y)
 
@@ -63,7 +63,7 @@ namespace RS.Core.Service
             uow.Repository<D>().Add(entity);
 
             if(isCommit)
-                await uow.SaveChanges();
+                await uow.SaveChangesAsync();
 
             return new APIResult { Data = entity.ID, Message = Messages.Ok };
         }
@@ -90,7 +90,7 @@ namespace RS.Core.Service
             Mapper.Map(entity, model);
 
             if (isCommit)
-                await uow.SaveChanges();
+                await uow.SaveChangesAsync();
 
             return new APIResult() { Message = Messages.Ok };
         }
@@ -101,33 +101,40 @@ namespace RS.Core.Service
             if (entity == null)
                 return new APIResult() { Data=id , Message = Messages.GNE0001 };
 
-            if (entity is ITableEntity<Y> && UserID != null && checkAuthorize)
+            if (entity is ITableEntity<Y>)
+            {
+                //Access Control
+                if (UserID != null && checkAuthorize)
                 {
                     if ((entity as ITableEntity<Y>).CreateBy != UserID.Value)
                         return new APIResult() { Message = Messages.GNW0001 };
                 }
 
+                 (entity as ITableEntity<Y>).UpdateDT = DateTime.Now;
+                 (entity as ITableEntity<Y>).UpdateBy = UserID.Value;
+            }
+
             entity.IsDeleted = true;
 
             if(isCommit)
-                await uow.SaveChanges();
+                await uow.SaveChangesAsync();
 
             return new APIResult() { Data=id, Message = Messages.Ok };
         }
-        public virtual G GetByID(Y id,Guid? UserID=null, bool isDeleted = false)
+        public virtual async Task<G> GetByID(Y id,Guid? UserID=null, bool isDeleted = false)
         {
             //İlgili kaydın, ilgili kullanıcıya ait olma durumunu kontrol etmektedir.
             if (UserID != null)
             {
                 var query = (IQueryable<ITableEntity<Y>>)uow.Repository<D>().Query(isDeleted);
 
-                return query.Where(x=>(object)x.ID==(object)id && x.CreateBy==UserID.Value).Cast<D>().
-                    ProjectTo<G>().FirstOrDefault();
+                return await query.Where(x=>(object)x.ID==(object)id && x.CreateBy==UserID.Value).Cast<D>().
+                    ProjectTo<G>().FirstOrDefaultAsync();
             }
 
-            return uow.Repository<D>().Query(isDeleted).Where(x => (object)x.ID == (object)id).ProjectTo<G>().FirstOrDefault();
+            return await uow.Repository<D>().Query(isDeleted).Where(x => (object)x.ID == (object)id).ProjectTo<G>().FirstOrDefaultAsync();
         }
-        public virtual IList<AutoCompleteListVM<Y>> AutoCompleteList(Y? id = null, string Text = null)
+        public virtual async Task<IList<AutoCompleteListVM<Y>>> AutoCompleteList(Y? id = null, string Text = null)
         {
             var query = uow.Repository<D>().Query().ProjectTo<AutoCompleteList<Y>>().AsQueryable();
 
@@ -139,7 +146,7 @@ namespace RS.Core.Service
             if (Text != null)
                 query = query.Where(x => x.Search.Contains(Text));
 
-            return query.OrderBy(x=>x.Text).ProjectTo<AutoCompleteListVM<Y>>().ToList();
+            return await query.OrderBy(x=>x.Text).ProjectTo<AutoCompleteListVM<Y>>().ToListAsync();
         }
     }
 }
