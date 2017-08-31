@@ -15,8 +15,6 @@ namespace RS.Core.Service
 {
     ///ToDo:
     /// checkAutorize read in webconfig
-    /// Itableentityler model degıl entity olacak.
-    ///Createby ve updateby generic type alacak (Y)
 
     public interface IBaseService<A,U,G,D,Y>:ICRUDService<A,U,G,Y>
         where Y:struct
@@ -54,10 +52,10 @@ namespace RS.Core.Service
                     entity.ID = (Y)TypeDescriptor.GetConverter(typeof(Y)).ConvertFromInvariantString(Guid.NewGuid().ToString());
             }
 
-            if (model is ITableEntity<Y>)
+            if (entity is ITableEntity<Y>)
             {
-                (model as ITableEntity<Y>).CreateBy = UserID;
-                (model as ITableEntity<Y>).CreateDT = DateTime.Now;      
+                (entity as ITableEntity<Y>).CreateBy = UserID;
+                (entity as ITableEntity<Y>).CreateDT = DateTime.Now;      
             }
                 
             uow.Repository<D>().Add(entity);
@@ -71,23 +69,23 @@ namespace RS.Core.Service
         {
             D entity = await uow.Repository<D>().GetByID(model.ID);
 
-            if (model == null)
+            if (entity == null)
                 return new APIResult() { Data = model.ID, Message = Messages.GNE0001 };
 
-            if (model is ITableEntity<Y>)
+            if (entity is ITableEntity<Y>)
             {
                 ///Access Control
                 if (UserID != null && checkAuthorize)
                 {
-                    if ((object)(model as ITableEntity<Y>).CreateBy != (object)UserID.Value)
+                    if ((object)(entity as ITableEntity<Y>).CreateBy != (object)UserID.Value)
                         return new APIResult() { Data = model.ID, Message = Messages.GNW0001 };
                 }
 
-                (model as ITableEntity<Y>).UpdateDT = DateTime.Now;
-                (model as ITableEntity<Y>).UpdateBy = UserID.Value;
+                (entity as ITableEntity<Y>).UpdateDT = DateTime.Now;
+                (entity as ITableEntity<Y>).UpdateBy = UserID.Value;
             }
 
-            Mapper.Map(entity, model);
+            Mapper.Map(model, entity);
 
             if (isCommit)
                 await uow.SaveChangesAsync();
