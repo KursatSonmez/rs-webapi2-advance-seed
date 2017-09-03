@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoMapper\AutoMapperConfig.cs" />
     <Compile Include="Base\DTOs\Result\APIResult.cs" />
     <Compile Include="Base\Services\BaseService.cs" />
     <Compile Include="Base\Services\ICRUDService.cs" />
