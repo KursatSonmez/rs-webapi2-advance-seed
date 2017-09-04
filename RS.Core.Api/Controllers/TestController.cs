@@ -13,9 +13,9 @@ namespace RS.Core.Controllers
     public class TestController : ApiController
     {
         private IUserService _service;
-        public TestController()
+        public TestController(IUserService service)
         {
-            _service = new UserService();
+            _service = service;
         }
 
         [Route("Get")]
