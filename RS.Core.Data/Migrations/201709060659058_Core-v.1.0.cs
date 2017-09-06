@@ -3,7 +3,7 @@ namespace RS.Core.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class B1RSC1 : DbMigration
+    public partial class Corev10 : DbMigration
     {
         public override void Up()
         {
@@ -15,6 +15,8 @@ namespace RS.Core.Data.Migrations
                         Name = c.String(nullable: false, maxLength: 50),
                         Phone = c.String(nullable: false, maxLength: 50),
                         Email = c.String(nullable: false, maxLength: 50),
+                        LastLoginDate = c.DateTime(),
+                        IdentityUserID = c.Guid(nullable: false),
                         CreateDT = c.DateTime(nullable: false),
                         UpdateDT = c.DateTime(),
                         CreateBy = c.Guid(nullable: false),
