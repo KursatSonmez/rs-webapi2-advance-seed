@@ -15,6 +15,9 @@ namespace RS.Core.Domain
         public string Phone { get; set; }
         [Required, MaxLength(50)]
         public string Email { get; set; }
+        public DateTime? LastLoginDate { get; set; }
+        [Required]
+        public Guid IdentityUserID { get; set; }
 
         ///Custom code is here
     }

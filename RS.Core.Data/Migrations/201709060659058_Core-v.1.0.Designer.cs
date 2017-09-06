@@ -7,13 +7,13 @@ namespace RS.Core.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class B1RSC1 : IMigrationMetadata
+    public sealed partial class Corev10 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(B1RSC1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Corev10));
         
         string IMigrationMetadata.Id
         {
-            get { return "201707051253258_B1-RSC1"; }
+            get { return "201709060659058_Core-v.1.0"; }
         }
         
         string IMigrationMetadata.Source

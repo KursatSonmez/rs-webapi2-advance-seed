@@ -265,7 +265,7 @@ namespace RS.Core.Controllers
                 ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
                     CookieAuthenticationDefaults.AuthenticationType);
 
-                AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user.UserName);
+                AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user.UserName,Guid.Empty);
                 Authentication.SignIn(properties, oAuthIdentity, cookieIdentity);
             }
             else
