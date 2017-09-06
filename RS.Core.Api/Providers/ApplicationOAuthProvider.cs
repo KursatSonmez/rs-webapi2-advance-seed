@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using RS.Core.Models;
+using RS.Core.Service.CustomIdentity;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace RS.Core.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
         private readonly string _publicClientId;
+        private CustomIdentityService _customIdentityService;
 
         public ApplicationOAuthProvider(string publicClientId)
         {
@@ -30,6 +29,7 @@ namespace RS.Core.Providers
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
+            _customIdentityService = new CustomIdentityService();
 
             ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
 
@@ -38,13 +38,18 @@ namespace RS.Core.Providers
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
                 return;
             }
-
+            else
+                await _customIdentityService.UpdateLoginDate(Guid.Parse(user.Id));
+            
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
                OAuthDefaults.AuthenticationType);
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
                 CookieAuthenticationDefaults.AuthenticationType);
 
-            AuthenticationProperties properties = CreateProperties(user.UserName);
+            Guid userID = await _customIdentityService.UserID(Guid.Parse(user.Id));
+            oAuthIdentity.AddClaim(new Claim("userID", userID.ToString()));
+
+            AuthenticationProperties properties = CreateProperties(user.UserName,userID);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -86,10 +91,11 @@ namespace RS.Core.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName)
+        public static AuthenticationProperties CreateProperties(string userName,Guid userID)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
+                { "userID", userID.ToString() },
                 { "userName", userName }
             };
             return new AuthenticationProperties(data);

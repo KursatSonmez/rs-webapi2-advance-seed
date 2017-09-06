@@ -97,6 +97,7 @@
     <Compile Include="Base\DTOs\Result\APIResult.cs" />
     <Compile Include="Base\Services\BaseService.cs" />
     <Compile Include="Base\Services\ICRUDService.cs" />
+    <Compile Include="CustomIdentity\CustomIdentityService.cs" />
     <Compile Include="DTOs\Account\UserDto.cs" />
     <Compile Include="Base\DTOs\AutoComplete\AutoCompleteList.cs" />
     <Compile Include="Base\DTOs\Entity\EntityGetDto.cs" />
