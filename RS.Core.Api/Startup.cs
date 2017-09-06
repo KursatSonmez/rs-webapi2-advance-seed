@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Owin;
 using RS.Core.App_Start;
 using RS.Core.Service.AutoMapper;
@@ -11,6 +12,9 @@ namespace RS.Core
     {
         public void Configuration(IAppBuilder app)
         {
+            //Cors
+            app.UseCors(CorsOptions.AllowAll);
+
             //Autofac
             app.UseAutofacMiddleware(AutofacConfig.Configure());
 
