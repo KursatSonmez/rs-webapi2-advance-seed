@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
+using System.ComponentModel;
 using System.Security.Claims;
 using System.Web;
 
 namespace RS.Core.Controllers
 {
-    public static class RSTokenInformation
+    public static class IdentityClaimsValues
     {
         public static Guid IdentityUserID
         {
@@ -15,9 +16,10 @@ namespace RS.Core.Controllers
         {
             get { return HttpContext.Current.User.Identity.GetUserName(); }
         }
-        public static Guid UserID
+        public static Y UserID<Y>()
+            where Y:struct
         {
-            get { return Guid.Parse(((ClaimsIdentity)HttpContext.Current.User.Identity).FindFirst("UserID").Value); }
+            return (Y)TypeDescriptor.GetConverter(typeof(Y)).ConvertFromInvariantString(((ClaimsIdentity)HttpContext.Current.User.Identity).FindFirst("userID").Value);
         }
     }
 }
