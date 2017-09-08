@@ -1,7 +1,6 @@
 ﻿using RS.Core.Service.DTOs;
-using System.Threading.Tasks;
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RS.Core.Service
 {
@@ -11,9 +10,9 @@ namespace RS.Core.Service
         where G : EntityGetDto<Y>
     {
         Task<APIResult> Add(A model, Y userID, bool isCommit = true);
-        Task<APIResult> Update(U model, Y? userID = null, bool isCommit = true, bool checkAuthorize = false);
-        Task<APIResult> Delete(Y id, Y? userID = null, bool isCommit = true, bool checkAuthorize = false);
-        Task<G> GetByID(Y id, Y? userID = null, bool isDeleted = false);
-        Task<IList<AutoCompleteListVM<Y>>> AutoCompleteList(Y? id = null, string text = null);
+        Task<APIResult> Update(U model, Y? userID = default(Y?), bool isCommit = true, bool checkAuthorize = false);
+        Task<APIResult> Delete(Y id, Y? userID = default(Y?), bool isCommit = true, bool checkAuthorize = false);
+        Task<G> GetByID(Y id, Y? userID = default(Y?), bool isDeleted = false);
+        Task<IList<AutoCompleteListVM<Y>>> AutoCompleteList(Y? id = default(Y?), string text = default(string));
     }
 }
