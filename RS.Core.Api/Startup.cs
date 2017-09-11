@@ -3,6 +3,7 @@ using Microsoft.Owin.Cors;
 using Owin;
 using RS.Core.App_Start;
 using RS.Core.Service.AutoMapper;
+using System;
 
 [assembly: OwinStartup(typeof(RS.Core.Startup))]
 
@@ -22,7 +23,7 @@ namespace RS.Core
             ConfigureAuth(app);
 
             //AutoMapper
-            AutoMapperConfig.Configure();
+            AutoMapperConfig<Guid>.Configure();
         }
     }
 }

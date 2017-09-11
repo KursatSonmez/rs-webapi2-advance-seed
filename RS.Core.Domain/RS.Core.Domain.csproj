@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="Base\Entity.cs" />
     <Compile Include="Base\TableEntity.cs" />
-    <Compile Include="Model\Account\User.cs" />
+    <Compile Include="Model\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
