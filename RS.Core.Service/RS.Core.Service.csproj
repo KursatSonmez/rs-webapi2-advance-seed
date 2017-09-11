@@ -98,7 +98,7 @@
     <Compile Include="Base\Services\BaseService.cs" />
     <Compile Include="Base\Services\ICRUDService.cs" />
     <Compile Include="CustomIdentity\CustomIdentityService.cs" />
-    <Compile Include="DTOs\Account\UserDto.cs" />
+    <Compile Include="DTOs\User\UserDto.cs" />
     <Compile Include="Base\DTOs\AutoComplete\AutoCompleteList.cs" />
     <Compile Include="Base\DTOs\Entity\EntityGetDto.cs" />
     <Compile Include="Base\DTOs\Entity\EntityUpdateDto.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="Base\Repositories\EntityRepository.cs" />
     <Compile Include="Base\UnitofWork\EntityUnitofWork.cs" />
     <Compile Include="Base\Repositories\IRepository.cs" />
-    <Compile Include="Services\Account\UserService.cs" />
+    <Compile Include="Services\User\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
