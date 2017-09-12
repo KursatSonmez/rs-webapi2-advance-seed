@@ -1,25 +1,25 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
+using RS.Core.Const;
+using RS.Core.Models;
+using RS.Core.Providers;
+using RS.Core.Results;
+using RS.Core.Service;
+using RS.Core.Service.DTOs;
+using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
-using RS.Core.Models;
-using RS.Core.Providers;
-using RS.Core.Results;
-using RS.Core.Service.DTOs;
-using RS.Core.Service;
-using RS.Core.Const;
-using System.Net;
+using System.Web.Http.Description;
 
 namespace RS.Core.Controllers
 {
@@ -131,7 +131,7 @@ namespace RS.Core.Controllers
 
             IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
                 model.NewPassword);
-            
+
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
@@ -264,9 +264,9 @@ namespace RS.Core.Controllers
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    OAuthDefaults.AuthenticationType);
+
+                ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
+                   OAuthDefaults.AuthenticationType);
                 ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
                     CookieAuthenticationDefaults.AuthenticationType);
 
@@ -339,7 +339,7 @@ namespace RS.Core.Controllers
             //You can implement your external user table.
             #region ExternalUserTable
 
-            APIResult customUserResult = await userService.Add(model, Guid.Parse(user.Id));
+            APIResult customUserResult = await userService.Register(model, Guid.Parse(user.Id));
 
             if (customUserResult.Message != Messages.Ok)
                 return Content(HttpStatusCode.BadRequest, customUserResult);
@@ -385,48 +385,99 @@ namespace RS.Core.Controllers
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
             {
-                return GetErrorResult(result); 
+                return GetErrorResult(result);
             }
             return Ok();
         }
 
-        ////GET api/Account/RemindPassword?=Email
-        //[AllowAnonymous]
-        //[Route("RemindPassword"), HttpGet]
-        //public async Task<IHttpActionResult> RemindPassword(string email)
-        //{
-        //    var user = await UserManager.FindByEmailAsync(email);
-        //    if (user == null)
-        //        return BadRequest(Messages.GNE0001);
+        // PUT api/Account/Update
+        [Route("Update"), HttpPut]
+        public async Task<IHttpActionResult> Update(UserUpdateDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        //    string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            var result = await userService.Update(model, IdentityClaimsValues.UserID<Guid>());
 
-        //    var result = userService.RemindPasswordMail(email, code, user.Id);
+            if (result.Message != Messages.Ok)
+                return Content(HttpStatusCode.BadRequest, result);
 
-        //    if (result.Message != Messages.Ok)
-        //        return Content(HttpStatusCode.BadRequest, result);
+            return Ok(result);
+        }
 
-        //    return Ok(result);
-        //}
+        // GET api/Account/RemindPassword?=email
+        [AllowAnonymous]
+        [Route("RemindPassword"), HttpGet]
+        public async Task<IHttpActionResult> RemindPassword(string email)
+        {
+            var user = await UserManager.FindByEmailAsync(email);
+            if (user == null)
+                return BadRequest(Messages.GNE0001);
 
-        ////POST api/Account/ResetPassword
-        //[AllowAnonymous, Route("ResetPassword"), HttpPost]
-        //public async Task<IHttpActionResult> ResetPassword(ResetPasswordBindingModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+            string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
 
-        //    IdentityResult result = await UserManager.ResetPasswordAsync(model.ID, model.Code, model.NewPassword);
+            var result = userService.RemindPassword(email, code, user.Id);
 
-        //    if (!result.Succeeded)
-        //    {
-        //        return GetErrorResult(result);
-        //    }
+            if (result.Message != Messages.Ok)
+                return Content(HttpStatusCode.BadRequest, result);
 
-        //    return Ok();
-        //}
+            return Ok(result);
+        }
+
+        // POST api/Account/ResetPassword
+        [AllowAnonymous]
+        [Route("ResetPassword"), HttpPost]
+        public async Task<IHttpActionResult> ResetPassword(ResetPasswordBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IdentityResult result = await UserManager.ResetPasswordAsync(model.ID, model.Code, model.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
+
+        // GET api/Account/Get
+        [Route("Get"), HttpGet]
+        [ResponseType(typeof(IEnumerable<UserListDto>))]
+        public async Task<IHttpActionResult> GetByID(Guid id)
+        {
+            var result = await userService.GetByID(id);
+
+            return Ok(result);
+        }
+
+        // GET api/Account/Get
+        [Route("Get"), HttpGet]
+        [ResponseType(typeof(IEnumerable<UserListDto>))]
+        public async Task<IHttpActionResult> GetList(string name = null, string email = null)
+        {
+            var result = await userService.GetList(name, email);
+
+            if (result == null || result.Count <= 0)
+                result = new List<UserListDto>();
+
+            return Ok(result);
+        }
+
+        // GET api/Account/GetSelectList
+        [Route("GetSelectList"), HttpGet]
+        public async Task<IHttpActionResult> AutoCompleteList(Guid? id = null, string text = null)
+        {
+            var result = await userService.AutoCompleteList(id, text);
+
+            if (result == null)
+                return Content(HttpStatusCode.OK, new string[0]);
+
+            return Ok(result);
+        }
 
         protected override void Dispose(bool disposing)
         {
