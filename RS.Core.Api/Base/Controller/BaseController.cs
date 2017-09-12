@@ -74,7 +74,7 @@ namespace RS.Core.Controllers
             return Ok(result);
         }
         [Route("GetSelectList"),HttpGet]
-        public virtual async Task<IHttpActionResult> AutoCompleteList(Y? id = null, string text = null)
+        public virtual async Task<IHttpActionResult> AutoCompleteList(Y? id = default(Y?), string text = default(string))
         {
             var result = await service.AutoCompleteList(id, text);
 

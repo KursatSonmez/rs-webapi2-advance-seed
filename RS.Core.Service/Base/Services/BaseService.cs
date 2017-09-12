@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using RS.Core.Const;
+using RS.Core.Domain;
+using RS.Core.Lib;
+using RS.Core.Service.DTOs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using RS.Core.Const;
-using RS.Core.Lib;
-using RS.Core.Domain;
-using RS.Core.Service.DTOs;
 using System.ComponentModel;
 using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RS.Core.Service
 {
@@ -62,7 +62,7 @@ namespace RS.Core.Service
 
             return new APIResult { Data = entity.ID, Message = Messages.Ok };
         }
-        public virtual async Task<APIResult> Update(U model, Y? userID = null, bool isCommit = true, bool checkAuthorize = false)
+        public virtual async Task<APIResult> Update(U model, Y? userID = default(Y?), bool isCommit = true, bool checkAuthorize = false)
         {
             D entity = await uow.Repository<D>().GetByID(model.ID);
 
@@ -89,7 +89,7 @@ namespace RS.Core.Service
 
             return new APIResult() { Message = Messages.Ok };
         }
-        public virtual async Task<APIResult> Delete(Y id,Y? userID=null,bool isCommit=true, bool checkAuthorize = false)
+        public virtual async Task<APIResult> Delete(Y id,Y? userID= default(Y?), bool isCommit=true, bool checkAuthorize = false)
         {
             D entity = await uow.Repository<D>().GetByID(id);
 
@@ -116,7 +116,7 @@ namespace RS.Core.Service
 
             return new APIResult() { Data=id, Message = Messages.Ok };
         }
-        public virtual async Task<G> GetByID(Y id,Y? userID=null, bool isDeleted = false)
+        public virtual async Task<G> GetByID(Y id,Y? userID= default(Y?), bool isDeleted = false)
         {
             //İlgili kaydın, ilgili kullanıcıya ait olma durumunu kontrol etmektedir.
             if (userID != null)
@@ -129,7 +129,7 @@ namespace RS.Core.Service
 
             return await uow.Repository<D>().Query(isDeleted).Where(x => (object)x.ID == (object)id).ProjectTo<G>().FirstOrDefaultAsync();
         }
-        public virtual async Task<IList<AutoCompleteListVM<Y>>> AutoCompleteList(Y? id = null, string text = null)
+        public virtual async Task<IList<AutoCompleteListVM<Y>>> AutoCompleteList(Y? id = default(Y?), string text = default(string))
         {
             var query = uow.Repository<D>().Query().ProjectTo<AutoCompleteList<Y>>().AsQueryable();
 
