@@ -46,7 +46,10 @@
     <Compile Include="RSValidation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Email\Template\EmailTemplate.html" />
+    <ProjectReference Include="..\RS.Core.Const\RS.Core.Const.csproj">
+      <Project>{e3c15176-cfad-4d20-bb22-aef26fbd2125}</Project>
+      <Name>RS.Core.Const</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

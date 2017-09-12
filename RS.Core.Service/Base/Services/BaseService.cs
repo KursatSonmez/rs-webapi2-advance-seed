@@ -19,7 +19,7 @@ namespace RS.Core.Service
         where U:EntityUpdateDto<Y>
         where G:EntityGetDto<Y>
     {
-        D AddMapping(A entity, Y? fooId = default(Y?));
+        D AddMapping(A entity);
     }
     public class BaseService<A,U,G,D,Y>:IBaseService<A,U,G,D,Y>
         where Y : struct
@@ -32,14 +32,14 @@ namespace RS.Core.Service
         {
             uow = _uow;
         }
-        public virtual D AddMapping(A model, Y? fooID = default(Y?))
+        public virtual D AddMapping(A model)
         {
             D entity = Mapper.Map<D>(model);
             return entity;
         }
-        public virtual async Task<APIResult> Add(A model,Y userID, bool isCommit = true, Y? fooID = default(Y?))
+        public virtual async Task<APIResult> Add(A model,Y userID, bool isCommit = true)
         {
-            D entity = AddMapping(model, fooID);
+            D entity = AddMapping(model);
 
             var pkType = default(Y);
 
