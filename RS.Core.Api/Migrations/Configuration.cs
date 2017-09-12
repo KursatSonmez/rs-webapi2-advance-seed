@@ -2,9 +2,9 @@ namespace RS.Core.Migrations
 {
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
+    using RS.Core.Models;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using RS.Core.Models;
 
     internal sealed class Configuration : DbMigrationsConfiguration<RS.Core.Models.ApplicationDbContext>
     {
@@ -22,6 +22,7 @@ namespace RS.Core.Migrations
             {
                 var user = new ApplicationUser
                 {
+                    Id= "7cbf9971-7957-48dd-8198-3394a9bf0059",
                     UserName = "info@remmsoft.com",
                     Email = "info@remmsoft.com",
                     PasswordHash = PasswordHash.HashPassword("Test123*")
