@@ -4,7 +4,9 @@ namespace RS.Core.Lib.Email
 {
     public class EmailDto
     {
-        public ArrayList EmailGroup { get; set; }
+        public ArrayList To { get; set; }
+        public ArrayList Cc { get; set; }
+        public ArrayList Bcc { get; set; }
         public string Subject { get; set; }
         public string BackgroundColor { get; set; }
         public string Header { get; set; }

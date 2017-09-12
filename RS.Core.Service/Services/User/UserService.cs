@@ -49,19 +49,17 @@ namespace RS.Core.Service
 
         public APIResult RemindPassword(string email, string code, string id)
         {
+            //Change `mailSettings` in web.config for send email.
             try
             {
-                ArrayList EmailGroup = new ArrayList();
-                EmailGroup.Add(email);
-
                 EmailDto emailModel = new EmailDto
                 {
-                    EmailGroup = EmailGroup,
+                    To = new ArrayList { email },
                     Subject = "RS Support",
                     BackgroundColor = "b61528",
                     Header = "Password Change Request",
                     Content = "We understand you're having trouble logging into your account. We can help you regain access to your account. " +
-                              "You can create a new password by clicking on the 'Change Password' button If this is not the case, you can ask our support team for help by emailing support@remmsoft.com.",
+                              "You can create a new password by clicking on the 'Change Password' button If this is not the case, you can ask our support team for help by emailing support@remmsoft.com",
                     ButtonValue = "Change Password",
                     //`resetPasswordUrl` is get from Web.Config.
                     URL = ConfigurationManager.AppSettings["resetPasswordUrl"] + "?id=" + id + "?code=" + code

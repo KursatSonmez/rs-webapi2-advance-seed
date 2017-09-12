@@ -71,6 +71,9 @@ namespace RS.Core.Controllers
         {
             var result = await service.GetByID(id);
 
+            if (result == null)
+                return BadRequest(Messages.GNE0001);
+
             return Ok(result);
         }
         [Route("GetSelectList"),HttpGet]
