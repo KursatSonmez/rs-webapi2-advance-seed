@@ -49,7 +49,7 @@ namespace RS.Core.Providers
             Guid userID = await _customIdentityService.UserID(Guid.Parse(user.Id));
             oAuthIdentity.AddClaim(new Claim("userID", userID.ToString()));
 
-            AuthenticationProperties properties = CreateProperties(user.UserName,userID);
+            AuthenticationProperties properties = CreateProperties(user.UserName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -91,11 +91,10 @@ namespace RS.Core.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName,Guid userID)
+        public static AuthenticationProperties CreateProperties(string userName)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
-                { "userID", userID.ToString() },
                 { "userName", userName }
             };
             return new AuthenticationProperties(data);
