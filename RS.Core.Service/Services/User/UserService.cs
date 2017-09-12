@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace RS.Core.Service
 {
-    public interface IUserService : IBaseService<UserAddDto, UserUpdateDto,UserCardDto,User,Guid>
+    public interface IUserService : IBaseService<UserAddDto, UserUpdateDto, UserCardDto, User, Guid>
     {
         Task<APIResult> Register(UserAddDto model, Guid identityUserID);
         APIResult RemindPassword(string email, string code, string id);
@@ -52,9 +52,9 @@ namespace RS.Core.Service
             //Change `mailSettings` in web.config for send email.
             try
             {
-                EmailDto emailModel = new EmailDto
+                EmailBasicTemplateDto emailModel = new EmailBasicTemplateDto
                 {
-                    To = new ArrayList { email },
+                    To = new List<string> { email },
                     Subject = "RS Support",
                     BackgroundColor = "b61528",
                     Header = "Password Change Request",
@@ -63,9 +63,9 @@ namespace RS.Core.Service
                     ButtonValue = "Change Password",
                     //`resetPasswordUrl` is get from Web.Config.
                     URL = ConfigurationManager.AppSettings["resetPasswordUrl"] + "?id=" + id + "?code=" + code
-            };
-               
-                emailService.SendMail(emailModel);
+                };
+
+                emailService.SendMailBasicTemplate(emailModel);
                 return new APIResult { Message = Messages.Ok };
             }
             catch (Exception ex)
@@ -74,7 +74,7 @@ namespace RS.Core.Service
             }
         }
 
-        public async Task<IList<UserListDto>> GetList(string name=null, string email=null)
+        public async Task<IList<UserListDto>> GetList(string name = null, string email = null)
         {
             var query = uow.Repository<User>().Query();
 
