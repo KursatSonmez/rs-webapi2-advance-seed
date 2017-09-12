@@ -14,8 +14,8 @@ namespace RS.Core.Data.Migrations
 
         protected override void Seed(RS.Core.Data.RSCoreDBContext context)
         {
-            //Veritabanýnda admin kullanýcýsýna ait bir kayýt yoksa, ilgili kaydýn atamasýný yapmaktadýr.
-            if (!context.User.Any(x => x.Email == "info@remmsoft.com"))
+            // Create User when not exist any user
+            if (!context.User.Any())
             {
                 var user = new User
                 {
