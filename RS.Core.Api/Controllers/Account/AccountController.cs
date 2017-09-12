@@ -17,6 +17,9 @@ using RS.Core.Models;
 using RS.Core.Providers;
 using RS.Core.Results;
 using RS.Core.Service.DTOs;
+using RS.Core.Service;
+using RS.Core.Const;
+using System.Net;
 
 namespace RS.Core.Controllers
 {
@@ -26,9 +29,11 @@ namespace RS.Core.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private IUserService userService;
 
-        public AccountController()
+        public AccountController(IUserService _userService)
         {
+            userService = _userService;
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -331,35 +336,22 @@ namespace RS.Core.Controllers
 
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
+            //You can implement your external user table.
+            #region ExternalUserTable
+
+            APIResult customUserResult = await userService.Add(model, Guid.Parse(user.Id));
+
+            if (customUserResult.Message != Messages.Ok)
+                return Content(HttpStatusCode.BadRequest, customUserResult);
+
+            #endregion
+
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
+                await userService.Delete(Guid.Parse(customUserResult.Data.ToString()));
                 return GetErrorResult(result);
-            }
-
-            //You can implement your external user table.
-            else
-            {
-                try
-                {
-                    if (!ModelState.IsValid)
-                        return BadRequest(ModelState);
-
-                    UserAddDto _myUser = new UserAddDto
-                    {
-                        Email = user.Email,
-                        Name=model.Name,
-                        Phone=model.Phone
-                    };
-
-                }
-                catch (Exception ex)
-                {
-                    ApplicationUser data = UserManager.FindById(user.Id);
-                    await UserManager.DeleteAsync(data);
-                    return BadRequest(ex.Message);
-                }
             }
 
             return Ok();
@@ -397,6 +389,44 @@ namespace RS.Core.Controllers
             }
             return Ok();
         }
+
+        ////GET api/Account/RemindPassword?=Email
+        //[AllowAnonymous]
+        //[Route("RemindPassword"), HttpGet]
+        //public async Task<IHttpActionResult> RemindPassword(string email)
+        //{
+        //    var user = await UserManager.FindByEmailAsync(email);
+        //    if (user == null)
+        //        return BadRequest(Messages.GNE0001);
+
+        //    string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+
+        //    var result = userService.RemindPasswordMail(email, code, user.Id);
+
+        //    if (result.Message != Messages.Ok)
+        //        return Content(HttpStatusCode.BadRequest, result);
+
+        //    return Ok(result);
+        //}
+
+        ////POST api/Account/ResetPassword
+        //[AllowAnonymous, Route("ResetPassword"), HttpPost]
+        //public async Task<IHttpActionResult> ResetPassword(ResetPasswordBindingModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    IdentityResult result = await UserManager.ResetPasswordAsync(model.ID, model.Code, model.NewPassword);
+
+        //    if (!result.Succeeded)
+        //    {
+        //        return GetErrorResult(result);
+        //    }
+
+        //    return Ok();
+        //}
 
         protected override void Dispose(bool disposing)
         {
