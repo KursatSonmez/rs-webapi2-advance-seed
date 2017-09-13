@@ -451,6 +451,9 @@ namespace RS.Core.Controllers
         {
             var result = await userService.GetByID(id);
 
+            if (result == null)
+                return BadRequest(Messages.GNE0001);
+
             return Ok(result);
         }
 

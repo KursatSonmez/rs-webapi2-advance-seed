@@ -55,5 +55,17 @@
 
         #endregion General
 
+        ///Modul kodu : 'EM'
+        #region Email
+
+        #region Warning
+        /// <summary>
+        /// Mail gönderilmek üzere en az bir mail adresi seçilmek zorundadır.
+        /// - Status Code: Unauthorized
+        /// </summary>
+        public static string EMW0001 = "EMW0001";
+        #endregion Warning
+
+        #endregion Email
     }
 }
