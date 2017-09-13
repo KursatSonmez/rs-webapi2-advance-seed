@@ -15,10 +15,10 @@ namespace RS.Core.Migrations
 
         protected override void Seed(RS.Core.Models.ApplicationDbContext context)
         {
-            //Veritabanýnda admin kullanýcýsýna ait bir kayýt yoksa, ilgili kaydýn atamasýný yapmaktadýr.
+            // Create ApplicationUser when not exist any user
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             var PasswordHash = new PasswordHasher();
-            if (!context.Users.Any(x => x.UserName == "info@remmsoft.com"))
+            if (!context.Users.Any())
             {
                 var user = new ApplicationUser
                 {
