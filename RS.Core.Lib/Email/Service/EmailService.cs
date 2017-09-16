@@ -63,17 +63,16 @@ namespace RS.Core.Lib.Email
             template = template.Replace("**URL**", model.URL);
             template = template.Replace("**ButtonValue**", model.ButtonValue);
 
-            EmailDto emailDto = new EmailDto();
-            emailDto.To = model.To;
-            emailDto.Cc = model.Cc;
-            emailDto.Bcc = model.Bcc;
-            emailDto.Subject = model.Subject;
-            emailDto.Body = template;
+            EmailDto emailDto = new EmailDto
+            {
+                To = model.To,
+                Cc = model.Cc,
+                Bcc = model.Bcc,
+                Subject = model.Subject,
+                Body = template
+            };
 
             SendMail(emailDto, true);
         }
-
-
-
     }
 }

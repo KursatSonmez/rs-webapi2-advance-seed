@@ -74,7 +74,7 @@ namespace RS.Core.Service
                 ///Access Control
                 if (userID != null && checkAuthorize)
                 {
-                    if ((object)(entity as ITableEntity<Y>).CreateBy != (object)userID.Value)
+                    if (!(entity as ITableEntity<Y>).CreateBy.Equals(userID.Value))
                         return new APIResult() { Data = model.ID, Message = Messages.GNW0001 };
                 }
 
@@ -87,7 +87,7 @@ namespace RS.Core.Service
             if (isCommit)
                 await uow.SaveChangesAsync();
 
-            return new APIResult() { Message = Messages.Ok };
+            return new APIResult() { Data = entity.ID, Message = Messages.Ok };
         }
         public virtual async Task<APIResult> Delete(Y id,Y? userID= default(Y?), bool isCommit=true, bool checkAuthorize = false)
         {
@@ -101,7 +101,7 @@ namespace RS.Core.Service
                 //Access Control
                 if (userID != null && checkAuthorize)
                 {
-                    if ((object)(entity as ITableEntity<Y>).CreateBy != (object)userID.Value)
+                    if (!(entity as ITableEntity<Y>).CreateBy.Equals(userID.Value))
                         return new APIResult() { Message = Messages.GNW0001 };
                 }
 
@@ -118,16 +118,13 @@ namespace RS.Core.Service
         }
         public virtual async Task<G> GetByID(Y id,Y? userID= default(Y?), bool isDeleted = false)
         {
+            var query = uow.Repository<D>().Query(isDeleted).Where(Predicate.GenericId<D, Y>("ID", id));
+
             //İlgili kaydın, ilgili kullanıcıya ait olma durumunu kontrol etmektedir.
             if (userID != null)
-            {
-                var query = (IQueryable<ITableEntity<Y>>)uow.Repository<D>().Query(isDeleted);
+                query = query.Where(Predicate.GenericId<D, Y>("CreateBy", userID.Value));
 
-                return await query.Where(x=>(object)x.ID==(object)id && (object)x.CreateBy== (object)userID.Value).Cast<D>().
-                    ProjectTo<G>().FirstOrDefaultAsync();
-            }
-
-            return await uow.Repository<D>().Query(isDeleted).Where(x => (object)x.ID == (object)id).ProjectTo<G>().FirstOrDefaultAsync();
+            return await query.ProjectTo<G>().FirstOrDefaultAsync();
         }
         public virtual async Task<IList<AutoCompleteListVM<Y>>> AutoCompleteList(Y? id = default(Y?), string text = default(string))
         {
@@ -135,7 +132,7 @@ namespace RS.Core.Service
 
             var pkType = default(Y);
 
-            if((pkType is Guid && !(id as Guid?).IsNullOrEmpty()) || id!=null)
+            if ((pkType is Guid && !(id as Guid?).IsNullOrEmpty()) || id != null)
                 query = query.Where(x => (object)x.ID == (object)id);
 
             if (text != null)
