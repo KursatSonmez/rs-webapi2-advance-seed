@@ -5,7 +5,6 @@ using RS.Core.Domain;
 using RS.Core.Lib.Email;
 using RS.Core.Service.DTOs;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
@@ -85,6 +84,5 @@ namespace RS.Core.Service
 
             return await query.ProjectTo<UserListDto>().ToListAsync();
         }
-
     }
 }
