@@ -6,7 +6,7 @@ namespace RS.Core.Service
 {
     public static class Predicate
     {
-        public static Expression<Func<T, bool>> GenericId<T,Y>(string property,Y constant)
+        public static Expression<Func<T, bool>> Equal<T,Y>(string property,Y constant)
             where Y:struct
             where T:Entity<Y>
         {
