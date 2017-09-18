@@ -10,7 +10,7 @@ namespace RS.Core.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "RS.CORE";
 
             return View();
         }

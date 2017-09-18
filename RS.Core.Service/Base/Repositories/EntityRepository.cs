@@ -24,7 +24,7 @@ namespace RS.Core.Service
         public virtual async Task<T> GetByID(Y id, bool isDeleted=false)
         {
             return await con.Set<T>().
-                Where(Predicate.GenericId<T,Y>("ID",id)).
+                Where(Predicate.Equal<T,Y>("ID",id)).
                 Where(x=>x.IsDeleted==isDeleted).
                 FirstOrDefaultAsync();
         } 

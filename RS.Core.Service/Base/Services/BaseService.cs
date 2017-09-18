@@ -118,11 +118,11 @@ namespace RS.Core.Service
         }
         public virtual async Task<G> GetByID(Y id,Y? userID= default(Y?), bool isDeleted = false)
         {
-            var query = uow.Repository<D>().Query(isDeleted).Where(Predicate.GenericId<D, Y>("ID", id));
+            var query = uow.Repository<D>().Query(isDeleted).Where(Predicate.Equal<D, Y>("ID", id));
 
             //İlgili kaydın, ilgili kullanıcıya ait olma durumunu kontrol etmektedir.
             if (userID != null)
-                query = query.Where(Predicate.GenericId<D, Y>("CreateBy", userID.Value));
+                query = query.Where(Predicate.Equal<D, Y>("CreateBy", userID.Value));
 
             return await query.ProjectTo<G>().FirstOrDefaultAsync();
         }
