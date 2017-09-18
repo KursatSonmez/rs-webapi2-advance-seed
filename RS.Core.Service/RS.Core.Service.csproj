@@ -97,6 +97,7 @@
     <Compile Include="AutoMapper\AutoMapperConfig.cs" />
     <Compile Include="Base\DTOs\Result\APIResult.cs" />
     <Compile Include="Base\Services\BaseService.cs" />
+    <Compile Include="Base\Services\Predicate.cs" />
     <Compile Include="Base\Services\ICRUDService.cs" />
     <Compile Include="CustomIdentity\CustomIdentityService.cs" />
     <Compile Include="DTOs\User\UserDto.cs" />
