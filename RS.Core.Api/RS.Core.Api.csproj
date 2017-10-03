@@ -259,6 +259,7 @@
     <Compile Include="Base\Controller\BaseController.cs" />
     <Compile Include="Controllers\Account\AccountController.cs" />
     <Compile Include="Base\Identity\IdentityClaimsValues.cs" />
+    <Compile Include="Controllers\AutoCode\AutoCodeController.cs" />
     <Compile Include="Controllers\Home\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

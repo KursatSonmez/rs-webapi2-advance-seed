@@ -22,5 +22,7 @@ namespace RS.Core.Data
         /// ToDo: Translate - DataSet objeleri test tarafýnda ezilip in-memory olarak kullanýlacaðý için virtual olarak tanýmlanmýþtýr.
         /// </summary>
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<AutoCode> AutoCode { get; set; }
+        public virtual DbSet<AutoCodeLog> AutoCodeLog { get; set; }
     }
 }

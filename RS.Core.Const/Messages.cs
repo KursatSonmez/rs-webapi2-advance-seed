@@ -67,5 +67,24 @@
         #endregion Warning
 
         #endregion Email
+
+        ///Modul kodu : 'AC'
+        #region AutoCode
+
+        #region Warning
+        /// <summary>
+        /// İlgili ekran kodu bulunamadı.
+        /// - Status Code: NotFound
+        /// </summary>
+        public static string ACW0001 = "ACW0001";
+
+        /// <summary>
+        /// Kod formatının içine, otomatik artan kod numarasının eklenebilmesi için {0} yazılmalıdır.
+        /// - Status Code: NotAcceptable
+        /// </summary>
+        public static string ACW0002 = "ACW0002";
+        #endregion Warning
+
+        #endregion AutoCode
     }
 }

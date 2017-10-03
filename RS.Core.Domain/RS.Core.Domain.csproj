@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Base\Entity.cs" />
     <Compile Include="Base\TableEntity.cs" />
+    <Compile Include="Model\AutoCode\AutoCode.cs" />
+    <Compile Include="Model\AutoCode\AutoCodeLog.cs" />
     <Compile Include="Model\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
