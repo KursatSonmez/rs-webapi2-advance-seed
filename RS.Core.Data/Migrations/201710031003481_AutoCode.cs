@@ -12,8 +12,8 @@ namespace RS.Core.Data.Migrations
                 c => new
                     {
                         ID = c.Guid(nullable: false),
-                        ScreenCode = c.String(nullable: false, maxLength: 20),
-                        CodeFormat = c.String(nullable: false, maxLength: 50),
+                        ScreenCode = c.String(nullable: false, maxLength: 5),
+                        CodeFormat = c.String(nullable: false, maxLength: 20),
                         LastCodeNumber = c.Int(nullable: false),
                         CreateDT = c.DateTime(nullable: false),
                         UpdateDT = c.DateTime(),

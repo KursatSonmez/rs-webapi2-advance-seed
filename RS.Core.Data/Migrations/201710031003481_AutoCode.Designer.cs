@@ -13,7 +13,7 @@ namespace RS.Core.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201710021705465_AutoCode"; }
+            get { return "201710031003481_AutoCode"; }
         }
         
         string IMigrationMetadata.Source

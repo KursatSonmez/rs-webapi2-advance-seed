@@ -18,12 +18,12 @@ namespace RS.Core.Domain
         /// Fixed screen codes
         /// <see cref="Const.ScreenCodes"/>
         /// </summary>
-        [Required,MaxLength(20)]
+        [Required,MaxLength(5)]
         public string  ScreenCode { get; set; }
         /// <summary>
         /// Sample code format = "TC-{0}-RS"
         /// </summary>
-        [Required,MaxLength(50)]
+        [Required,MaxLength(20)]
         public string CodeFormat { get; set; }
         public int LastCodeNumber { get; set; }
 

@@ -33,23 +33,32 @@ namespace RS.Core.Service
             return codeFormat.Contains("{0}");
         }
 
+        /// <summary>
+        /// Controls whether the display code is in the <see cref="ScreenCodes"/> class.
+        /// </summary>
+        /// <param name="screenCode"></param>
+        /// <returns></returns>
+        public bool CheckScreenCode(string screenCode)
+        {
+            return typeof(ScreenCodes).GetFields().Any(x => x.Name == screenCode);
+        }
+
         public override Task<APIResult> Add(AutoCodeAddDto model, Guid userID, bool isCommit = true)
         {
-            ///Controls whether the display code is in the <see cref="ScreenCodes"/> class.
-            var checkScreenCode = typeof(ScreenCodes).GetFields().Any(x => x.Name == model.ScreenCode);
-            if (!checkScreenCode)
-                Task completedTask = Task.CompletedTask;
-            return Task.CompletedTask(new APIResult { Message = Messages.ACW0001 });
-            //new APIResult { Message = Messages.ACW0001 };
+            if (!CheckScreenCode(model.ScreenCode))
+                return Task.FromResult(new APIResult { Message = Messages.ACW0001 });
 
             if (!CheckCodeFormat(model.CodeFormat))
-                return new APIResult { Message = Messages.ACW0002 };
+                return Task.FromResult(new APIResult { Message = Messages.ACW0002 });
 
             return base.Add(model, userID, isCommit);
         }
 
         public override Task<APIResult> Update(AutoCodeUpdateDto model, Guid? userID = null, bool isCommit = true, bool checkAuthorize = false)
         {
+            if (!CheckCodeFormat(model.CodeFormat))
+                return Task.FromResult(new APIResult { Message = Messages.ACW0002 });
+
             return base.Update(model, userID, isCommit, checkAuthorize);
         }
 

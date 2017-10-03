@@ -6,17 +6,23 @@ namespace RS.Core.Service.DTOs
     public class AutoCodeAddDto
     {
         /// <summary>
-        /// Sabit olarak tanımlanan ekran kodları
+        /// Fixed screen codes
         /// <see cref="Const.ScreenCodes"/>
         /// </summary>
-        [Required, MaxLength(20)]
+        [Required, MaxLength(5)]
         public string ScreenCode { get; set; }
-        [Required, MaxLength(50)]
+        /// <summary>
+        /// Sample code format = "TC-{0}-RS"
+        /// </summary>
+        [Required, MaxLength(13)]
         public string CodeFormat { get; set; }
     }
     public class AutoCodeUpdateDto:EntityUpdateDto<Guid>
     {
-        [Required, MaxLength(50)]
+        /// <summary>
+        /// Sample code format = "TC-{0}-RS"
+        /// </summary>
+        [Required, MaxLength(13)]
         public string CodeFormat { get; set; }
     }
     public class AutoCodeGetDto:EntityGetDto<Guid>
