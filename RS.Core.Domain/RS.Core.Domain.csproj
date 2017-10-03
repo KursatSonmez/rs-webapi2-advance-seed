@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RS.Core.Domain</RootNamespace>
     <AssemblyName>RS.Core.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +50,8 @@
   <ItemGroup>
     <Compile Include="Base\Entity.cs" />
     <Compile Include="Base\TableEntity.cs" />
+    <Compile Include="Model\AutoCode\AutoCode.cs" />
+    <Compile Include="Model\AutoCode\AutoCodeLog.cs" />
     <Compile Include="Model\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

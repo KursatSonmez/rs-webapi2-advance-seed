@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using RS.Core.Domain;
 using RS.Core.Service.DTOs;
-using System;
 
 namespace RS.Core.Service.AutoMapper
 {
@@ -14,6 +13,18 @@ namespace RS.Core.Service.AutoMapper
             {
                 #region AutoCompleteList
                 x.CreateMap<AutoCompleteList<Y>, AutoCompleteListVM<Y>>().ReverseMap();
+
+                #endregion
+
+                #region AutoCode
+                x.CreateMap<AutoCodeAddDto, AutoCode>();
+                x.CreateMap<AutoCodeUpdateDto, AutoCode>();
+                x.CreateMap<AutoCode, AutoCodeGetDto>();
+                x.CreateMap<AutoCodeLog, AutoCodeLogListDto>().
+                    ForMember(
+                        y => y.Code,
+                        opt => opt.MapFrom(
+                            src => src.AutoCode.CodeFormat.Replace("{0}", src.CodeNumber.ToString())));
 
                 #endregion
 
@@ -33,6 +44,7 @@ namespace RS.Core.Service.AutoMapper
                             src => src.Name));
 
                 #endregion
+
             });
         }
     }

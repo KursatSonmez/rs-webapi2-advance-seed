@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RS.Core.Service</RootNamespace>
     <AssemblyName>RS.Core.Service</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -95,10 +96,14 @@
   <ItemGroup>
     <Compile Include="App_Start\AutofacContext.cs" />
     <Compile Include="AutoMapper\AutoMapperConfig.cs" />
+    <Compile Include="Base\DTOs\AutoCode\AutoCodeDto.cs" />
+    <Compile Include="Base\DTOs\AutoCode\AutoCodeLogDto.cs" />
     <Compile Include="Base\DTOs\Result\APIResult.cs" />
-    <Compile Include="Base\Services\BaseService.cs" />
-    <Compile Include="Base\Services\Predicate.cs" />
-    <Compile Include="Base\Services\ICRUDService.cs" />
+    <Compile Include="Base\Services\AutoCode\AutoCodeService.cs" />
+    <Compile Include="Base\Services\AutoCode\AutoCodeLogService.cs" />
+    <Compile Include="Base\Services\Entity\BaseService.cs" />
+    <Compile Include="Base\Services\Entity\Predicate.cs" />
+    <Compile Include="Base\Services\Entity\ICRUDService.cs" />
     <Compile Include="CustomIdentity\CustomIdentityService.cs" />
     <Compile Include="DTOs\User\UserDto.cs" />
     <Compile Include="Base\DTOs\AutoComplete\AutoCompleteList.cs" />
@@ -134,5 +139,6 @@
       <Name>RS.Core.Lib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

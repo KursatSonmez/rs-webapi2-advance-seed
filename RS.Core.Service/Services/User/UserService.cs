@@ -30,7 +30,7 @@ namespace RS.Core.Service
 
         public async Task<APIResult> Register(UserAddDto model, Guid identityUserID)
         {
-            var duplicateUserCheck = await uow.Repository<User>().Query().AnyAsync(x => x.Email == model.Email);
+            bool duplicateUserCheck = await uow.Repository<User>().Query().AnyAsync(x => x.Email == model.Email);
             if (duplicateUserCheck)
                 return new APIResult { Message = Messages.GNE0003 };
 

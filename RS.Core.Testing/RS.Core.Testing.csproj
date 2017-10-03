@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RS.Core.Testing</RootNamespace>
     <AssemblyName>RS.Core.Testing</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arrange\AutoCode\AutoCodeDtos.cs" />
     <Compile Include="Arrange\User\UserDtos.cs" />
     <Compile Include="Base\DBTest\BaseDBTest.cs" />
     <Compile Include="Base\UnitTest\BaseUnitTest.cs" />

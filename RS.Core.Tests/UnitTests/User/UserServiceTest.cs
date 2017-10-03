@@ -39,6 +39,7 @@ namespace RS.Core.Tests.UnitTests
             mockUserSet.Verify(m => m.Add(It.IsAny<User>()), Times.Once);
             mockUow.Verify(m => m.SaveChangesAsync(), Times.Once);
         }
+
         [TestMethod]
         public async Task TestDuplicateUser()
         {
@@ -56,6 +57,7 @@ namespace RS.Core.Tests.UnitTests
 
             Assert.AreEqual(result.Message, Messages.GNE0003);
         }
+
         [TestMethod] 
         public async Task TestUpdate()
         {

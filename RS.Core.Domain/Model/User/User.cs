@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RS.Core.Domain
@@ -20,5 +21,14 @@ namespace RS.Core.Domain
         public Guid IdentityUserID { get; set; }
 
         ///Custom code is here
+
+        //FK
+        //AutoCodeLog
+        public virtual ICollection<AutoCodeLog> AutoCodeLogs { get; set; }
+
+        public User()
+        {
+            AutoCodeLogs = new List<AutoCodeLog>();
+        }
     }
 }
