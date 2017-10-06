@@ -34,7 +34,7 @@ namespace RS.Core.Service
         }
 
         /// <summary>
-        /// Controls whether the display code is in the <see cref="ScreenCodes"/> class.
+        /// Controls whether the screen code is in the <see cref="ScreenCodes"/> class.
         /// </summary>
         /// <param name="screenCode"></param>
         /// <returns></returns>
@@ -46,10 +46,10 @@ namespace RS.Core.Service
         public override Task<APIResult> Add(AutoCodeAddDto model, Guid userID, bool isCommit = true)
         {
             if (!CheckScreenCode(model.ScreenCode))
-                return Task.FromResult(new APIResult { Message = Messages.ACW0001 });
+                return Task.FromResult(new APIResult { Message = Messages.GNW0002 });
 
             if (!CheckCodeFormat(model.CodeFormat))
-                return Task.FromResult(new APIResult { Message = Messages.ACW0002 });
+                return Task.FromResult(new APIResult { Message = Messages.ACW0001 });
 
             return base.Add(model, userID, isCommit);
         }
@@ -57,7 +57,7 @@ namespace RS.Core.Service
         public override Task<APIResult> Update(AutoCodeUpdateDto model, Guid? userID = null, bool isCommit = true, bool checkAuthorize = false)
         {
             if (!CheckCodeFormat(model.CodeFormat))
-                return Task.FromResult(new APIResult { Message = Messages.ACW0002 });
+                return Task.FromResult(new APIResult { Message = Messages.ACW0001 });
 
             return base.Update(model, userID, isCommit, checkAuthorize);
         }

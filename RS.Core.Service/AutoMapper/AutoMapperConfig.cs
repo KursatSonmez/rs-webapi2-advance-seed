@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RS.Core.Domain;
 using RS.Core.Service.DTOs;
+using System;
 
 namespace RS.Core.Service.AutoMapper
 {
@@ -25,6 +26,12 @@ namespace RS.Core.Service.AutoMapper
                         y => y.Code,
                         opt => opt.MapFrom(
                             src => src.AutoCode.CodeFormat.Replace("{0}", src.CodeNumber.ToString())));
+
+                #endregion
+
+                #region File
+                x.CreateMap<FileDto, File>().ReverseMap();
+                x.CreateMap<File, FileListDto>();
 
                 #endregion
 

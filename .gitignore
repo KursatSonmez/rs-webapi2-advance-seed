@@ -22,6 +22,9 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+# Upload folder has been removed from the git directory.
+/RS.Core.Api/App_Data/Upload
+
 # VS Code Workspace config file
 .vscode/settings.json
 
