@@ -51,6 +51,12 @@
         /// - Status Code: Unauthorized
         /// </summary>
         public static string GNW0001 = "GNW0001";
+
+        /// <summary>
+        /// İlgili ekran kodu bulunamadı.
+        /// - Status Code: NotFound
+        /// </summary>
+        public static string GNW0002 = "GNW0002";
         #endregion Warning
 
         #endregion General
@@ -72,19 +78,43 @@
         #region AutoCode
 
         #region Warning
-        /// <summary>
-        /// İlgili ekran kodu bulunamadı.
-        /// - Status Code: NotFound
-        /// </summary>
-        public static string ACW0001 = "ACW0001";
 
         /// <summary>
         /// Kod formatının içine, otomatik artan kod numarasının eklenebilmesi için {0} yazılmalıdır.
         /// - Status Code: NotAcceptable
         /// </summary>
-        public static string ACW0002 = "ACW0002";
+        public static string ACW0001 = "ACW0001";
         #endregion Warning
 
         #endregion AutoCode
+
+        ///Modul kodu : 'FU'
+        #region FileUpload
+
+        #region Error
+        /// <summary>
+        /// Dosya bulunamadı.
+        /// - Status Code: NotFound
+        /// </summary>
+        public static string FUE0001 = "FUE0001";
+
+        /// <summary>
+        /// screenCode ve refID alanı boş geçilemez.
+        /// - Status Code: BadRequest
+        /// </summary>
+        public static string FUE0002 = "FUE0002";
+
+        #endregion Error
+
+        #region Warning
+        /// <summary>
+        ///  Desteklenmeyen dosya türü.
+        /// - Status Code: UnsupportedMediaType
+        /// </summary>
+        public static string FUW0001 = "FUW0001";
+
+        #endregion Warning
+
+        #endregion
     }
 }

@@ -24,5 +24,6 @@ namespace RS.Core.Data
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<AutoCode> AutoCode { get; set; }
         public virtual DbSet<AutoCodeLog> AutoCodeLog { get; set; }
+        public virtual DbSet<File> File { get; set; }
     }
 }

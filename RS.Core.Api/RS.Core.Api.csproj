@@ -259,6 +259,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Base\Controller\BaseController.cs" />
+    <Compile Include="Controllers\File\FileController.cs" />
     <Compile Include="Controllers\Account\AccountController.cs" />
     <Compile Include="Base\Identity\IdentityClaimsValues.cs" />
     <Compile Include="Controllers\AutoCode\AutoCodeController.cs" />
@@ -360,7 +361,7 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\Upload\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

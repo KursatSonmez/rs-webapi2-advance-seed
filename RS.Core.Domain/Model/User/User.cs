@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations;
 namespace RS.Core.Domain
 {
     /// <summary> 
-    /// ToDo: Translate - Bu sınıfı özelleştirdiğiniz takdirde,ilgili servislerin düzgün çalışabilmesi için
-    /// 'UserDto' dosyasındaki sınıflarıda özelleştirmeniz gerekmektedir.
+    /// If you customize this class, you need to customize the classes 
+    /// in the 'UserDto' file so that the related services can work properly.
     /// </summary>
     public class User:TableEntity<Guid>
     {
