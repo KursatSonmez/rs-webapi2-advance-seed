@@ -10,10 +10,10 @@ namespace RS.Core.Service
         where G : EntityGetDto<Y>
         where C : EntityGetDto<Y>
     {
-        Task<APIResult> Add(A model, Y userID, bool isCommit = true);
-        Task<APIResult> Update(U model, Y? userID = default(Y?), bool isCommit = true, bool checkAuthorize = false);
-        Task<APIResult> Delete(Y id, Y? userID = default(Y?), bool isCommit = true, bool checkAuthorize = false);
-        Task<C> GetByID(Y id, Y? userID = default(Y?), bool isDeleted = false);
+        Task<APIResult> Add(A model, Y userId, bool isCommit = true);
+        Task<APIResult> Update(U model, Y userId, bool isCommit = true, bool checkAuthorize = false);
+        Task<APIResult> Delete(Y id, Y? userId = default(Y?), bool isCommit = true, bool checkAuthorize = false);
+        Task<C> GetById(Y id, Y? userId = default(Y?), bool isDeleted = false);
         Task<IList<AutoCompleteListVM<Y>>> AutoCompleteList(P parameters,
             Y? id = default(Y?), string text = default(string));
         Task<IList<G>> Get(P parameters, string sortField, bool sortOrder);

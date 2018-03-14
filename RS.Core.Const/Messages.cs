@@ -111,7 +111,7 @@
         public static string FUE0001 = "FUE0001";
 
         /// <summary>
-        /// screenCode ve refID alanı boş geçilemez.
+        /// screenCode ve refId alanı boş geçilemez.
         /// - Status Code: BadRequest
         /// </summary>
         public static string FUE0002 = "FUE0002";

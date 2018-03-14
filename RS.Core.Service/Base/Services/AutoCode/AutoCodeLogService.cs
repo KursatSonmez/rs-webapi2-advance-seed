@@ -12,32 +12,31 @@ namespace RS.Core.Service
 {
     public interface IAutoCodeLogService
     {
-        Task Add(AutoCodeLog entity, bool isCommit = true);
+        Task Add(SysAutoCodeLog entity, bool isCommit = true);
         Task<IList<AutoCodeLogListDto>> GetList
             (string screenCode = null, Guid? generatedBy = null, DateTime? generationDate = null);
     }
     public class AutoCodeLogService : IAutoCodeLogService
     {
-        private EntityUnitofWork<Guid> uow = null;
-        public AutoCodeLogService(EntityUnitofWork<Guid> _uow)
+        private EntityUnitofWork<Guid> _uow = null;
+        public AutoCodeLogService(EntityUnitofWork<Guid> uow)
         {
-            uow = _uow;
+            _uow = uow;
         }
-
-        public async Task Add(AutoCodeLog entity, bool isCommit = true)
+        public async Task Add(SysAutoCodeLog entity, bool isCommit = true)
         {
-            entity.ID = Guid.NewGuid();
+            entity.Id = Guid.NewGuid();
 
-            uow.Repository<AutoCodeLog>().Add(entity);
+            _uow.Repository<SysAutoCodeLog>().Add(entity);
 
             if (isCommit)
-                await uow.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
         }
 
         public async Task<IList<AutoCodeLogListDto>> GetList
             (string screenCode = null, Guid? generatedBy = null, DateTime? generationDate = null)
         {
-            var query = uow.Repository<AutoCodeLog>().Query();
+            var query = _uow.Repository<SysAutoCodeLog>().Query();
 
             if (screenCode != null)
                 query = query.Where(x => x.AutoCode.ScreenCode.Contains(screenCode));
@@ -46,8 +45,7 @@ namespace RS.Core.Service
             if (generationDate != null)
                 query = query.Where(x => DbFunctions.DiffDays(generationDate, x.CodeGenerationDate) == 0);
 
-            return await query.ProjectTo<AutoCodeLogListDto>().
-                OrderByDescending(x=>x.Code).ToListAsync();
+            return await query.ProjectTo<AutoCodeLogListDto>().OrderByDescending(x => x.Code).ToListAsync();
         }
     }
 }

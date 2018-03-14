@@ -31,7 +31,7 @@ namespace RS.Core.Tests.UnitTests
             _userService = new UserService(mockUow.Object, _emailService);
 
             var result = await _userService.Register(UserDtos.RegisterDto(),
-                UserDtos.InMemoryList().First().ID);
+                UserDtos.InMemoryList().First().Id);
 
             if (result.Message != Messages.Ok)
                 Assert.Inconclusive(result.Message);
@@ -53,7 +53,7 @@ namespace RS.Core.Tests.UnitTests
             _userService = new UserService(mockUow.Object, _emailService);
 
             var result = await _userService.Register(UserDtos.DuplicateUserDto(),
-                UserDtos.InMemoryList().First().ID);
+                UserDtos.InMemoryList().First().Id);
 
             Assert.AreEqual(result.Message, Messages.GNE0003);
         }
@@ -69,18 +69,18 @@ namespace RS.Core.Tests.UnitTests
             _userService = new UserService(mockUow.Object, _emailService);
 
             var result = await _userService.Update(UserDtos.UpdateDto(),
-                UserDtos.InMemoryList().First().ID, true, true);
+                UserDtos.InMemoryList().First().Id, true, true);
 
             if (result.Message != Messages.Ok)
                 Assert.Inconclusive(result.Message);
 
             Assert.AreEqual(
                 UserDtos.UpdateDto().Name, 
-                mockUserSet.Object.FirstOrDefault(x => x.ID == Guid.Parse(result.Data.ToString())).Name);
+                mockUserSet.Object.FirstOrDefault(x => x.Id == Guid.Parse(result.Data.ToString())).Name);
 
             Assert.AreEqual(
                 UserDtos.UpdateDto().Phone,
-                mockUserSet.Object.FirstOrDefault(x => x.ID == Guid.Parse(result.Data.ToString())).Phone);
+                mockUserSet.Object.FirstOrDefault(x => x.Id == Guid.Parse(result.Data.ToString())).Phone);
 
             mockUow.Verify(m => m.SaveChangesAsync(), Times.Once);
         }

@@ -6,7 +6,7 @@ namespace RS.Core.Service.DTOs
     {
         public DateTime CodeGenerationDate { get; set; }
         public string Code { get; set; }
-        public Guid UserID { get; set; }
+        public Guid UserId { get; set; }
         public string UserName { get; set; }
         public string UserEmail { get; set; }
     }

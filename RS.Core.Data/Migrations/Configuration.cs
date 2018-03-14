@@ -19,14 +19,14 @@ namespace RS.Core.Data.Migrations
             {
                 var user = new User
                 {
-                    ID = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     Name = "info@remmsoft.com",
                     Phone = "+90 224 372 9143",
                     Email = "info@remmsoft.com",
-                    IdentityUserID = Guid.Parse("7cbf9971-7957-48dd-8198-3394a9bf0059"),
+                    IdentityUserId = Guid.Parse("7cbf9971-7957-48dd-8198-3394a9bf0059"),
                     CreateDT = DateTime.Now
                 };
-                user.CreateBy = user.ID;
+                user.CreateBy = user.Id;
 
                 context.User.Add(user);
                 context.SaveChanges();

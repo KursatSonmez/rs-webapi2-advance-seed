@@ -13,17 +13,17 @@ namespace RS.Core.Controllers
     public class AutoCodeController : BaseController<AutoCodeAddDto, AutoCodeUpdateDto, AutoCodeGetDto, AutoCodeGetDto,
         AutoCodeFilterDto, Guid, IAutoCodeService>
     {
-        private IAutoCodeLogService autoCodeLogService = null;
-        public AutoCodeController(IAutoCodeService _service, IAutoCodeLogService _autoCodeLogService) : base(_service)
+        private IAutoCodeLogService _autoCodeLogService = null;
+        public AutoCodeController(IAutoCodeService service, IAutoCodeLogService autoCodeLogService) : base(service)
         {
-            autoCodeLogService = _autoCodeLogService;
+            _autoCodeLogService = autoCodeLogService;
         }
 
         [Route("AutoCodeGenerate"), HttpGet]
         [ResponseType(typeof(string))]
         public async Task<IHttpActionResult> AutoCodeGenerate(string screenCode = null)
         {
-            var result = await service.AutoCodeGenerate(screenCode, IdentityClaimsValues.UserID<Guid>());
+            var result = await _service.AutoCodeGenerate(screenCode, IdentityClaimsValues.UserId<Guid>());
 
             return Ok(result);
         }
@@ -32,7 +32,7 @@ namespace RS.Core.Controllers
         [ResponseType(typeof(IEnumerable<AutoCodeLogListDto>))]
         public async Task<IHttpActionResult> AutoCodeLogs(string screenCode = null, Guid? generatedBy = null, DateTime? generationDate = null)
         {
-            var result = await autoCodeLogService.GetList(screenCode, generatedBy, generationDate);
+            var result = await _autoCodeLogService.GetList(screenCode, generatedBy, generationDate);
 
             if (result == null || result.Count <= 0)
                 result = new List<AutoCodeLogListDto>();

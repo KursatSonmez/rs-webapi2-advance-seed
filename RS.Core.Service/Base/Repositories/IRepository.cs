@@ -10,7 +10,7 @@ namespace RS.Core.Service
         where Y:struct
     {
         RSCoreDBContext Context { get; set; }
-        Task<T> GetByID(Y id, bool isDeleted = false);
+        Task<T> GetById(Y id, bool isDeleted = false);
         IQueryable<T> Get(bool isDeleted = false);
         IQueryable<T> Query(bool isDeleted = false);
         void Add(T entity);

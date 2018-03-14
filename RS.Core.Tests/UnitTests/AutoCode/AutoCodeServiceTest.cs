@@ -22,12 +22,12 @@ namespace RS.Core.Tests.UnitTests
         public async Task TestAutoCodeGenerate()
         {
             //Context has been overriding and an in-memory autocode data has been added.
-            var mockAutoCodeSet = IMUow.Repository<AutoCode>().GetListAsync(AutoCodeDtos.InMemoryList());
-            mockContext.Setup(m => m.Set<AutoCode>()).Returns(mockAutoCodeSet.Object);
+            var mockAutoCodeSet = IMUow.Repository<SysAutoCode>().GetListAsync(AutoCodeDtos.InMemoryList());
+            mockContext.Setup(m => m.Set<SysAutoCode>()).Returns(mockAutoCodeSet.Object);
 
             //Context has been overriding and add mocked AutoCodeLog DbSet.
-            var mockAutoCodeLogSet = new Mock<DbSet<AutoCodeLog>>();
-            mockContext.Setup(m => m.Set<AutoCodeLog>()).Returns(mockAutoCodeLogSet.Object);
+            var mockAutoCodeLogSet = new Mock<DbSet<SysAutoCodeLog>>();
+            mockContext.Setup(m => m.Set<SysAutoCodeLog>()).Returns(mockAutoCodeLogSet.Object);
 
             //Unit of work has been mocked. Mock context sent to constructor. Services works with mocked unit of work.
             var mockUow = new Mock<EntityUnitofWork<Guid>>(mockContext.Object);
@@ -35,7 +35,7 @@ namespace RS.Core.Tests.UnitTests
             _autoCodeService = new AutoCodeService(mockUow.Object, _autoCodeLogService);
 
             var result = await _autoCodeService.AutoCodeGenerate(
-                AutoCodeDtos.ScreenCodeForAutomaticCodeGenerationTest,UserDtos.InMemoryList().First().ID);
+                AutoCodeDtos.ScreenCodeForAutomaticCodeGenerationTest,UserDtos.InMemoryList().First().Id);
 
             //Is the expected code the same as the generated code?
             Assert.AreEqual("CF-143-UT", result);
@@ -46,7 +46,7 @@ namespace RS.Core.Tests.UnitTests
                 mockAutoCodeSet.Object.
                     FirstOrDefault(x => x.ScreenCode == AutoCodeDtos.ScreenCodeForAutomaticCodeGenerationTest).LastCodeNumber);
 
-            mockAutoCodeLogSet.Verify(m => m.Add(It.IsAny<AutoCodeLog>()), Times.Once);
+            mockAutoCodeLogSet.Verify(m => m.Add(It.IsAny<SysAutoCodeLog>()), Times.Once);
             mockUow.Verify(m => m.SaveChangesAsync(), Times.Once);
         }
 

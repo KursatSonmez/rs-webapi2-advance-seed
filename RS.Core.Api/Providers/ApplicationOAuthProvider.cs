@@ -46,8 +46,8 @@ namespace RS.Core.Providers
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
                 CookieAuthenticationDefaults.AuthenticationType);
 
-            Guid userID = await _customIdentityService.UserID(Guid.Parse(user.Id));
-            oAuthIdentity.AddClaim(new Claim("userID", userID.ToString()));
+            Guid userId = await _customIdentityService.UserId(Guid.Parse(user.Id));
+            oAuthIdentity.AddClaim(new Claim("userId", userId.ToString()));
 
             AuthenticationProperties properties = CreateProperties(user.UserName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);

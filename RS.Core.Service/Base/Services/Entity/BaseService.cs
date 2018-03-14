@@ -22,7 +22,8 @@ namespace RS.Core.Service
         where G : EntityGetDto<Y>
         where C : EntityGetDto<Y>
     {
-        D AddMapping(A entity);
+        D AddMapping(A model, Y userId);
+        Task<D> UpdateMapping(U model, Y userId);
         IQueryable<D> PrepareGetQuery(P parameters);
     }
     public class BaseService<A, U, G, C, P, D, Y> : IBaseService<A, U, G, C, P, D, Y>
@@ -32,71 +33,75 @@ namespace RS.Core.Service
         where G : EntityGetDto<Y>
         where C : EntityGetDto<Y>
     {
-        protected EntityUnitofWork<Y> uow;
-        public BaseService(EntityUnitofWork<Y> _uow)
+        protected EntityUnitofWork<Y> _uow;
+        public BaseService(EntityUnitofWork<Y> uow)
         {
-            uow = _uow;
+            _uow = uow;
         }
-        public virtual D AddMapping(A model)
+        public virtual D AddMapping(A model, Y userId)
         {
             D entity = Mapper.Map<D>(model);
-            return entity;
-        }
-        public virtual async Task<APIResult> Add(A model, Y userID, bool isCommit = true)
-        {
-            D entity = AddMapping(model);
 
             var pkType = default(Y);
 
             if (pkType is Guid)
             {
-                if ((entity.ID as Guid?).IsNullOrEmpty())
-                    entity.ID = (Y)TypeDescriptor.GetConverter(typeof(Y)).ConvertFromInvariantString(Guid.NewGuid().ToString());
+                if ((entity.Id as Guid?).IsNullOrEmpty())
+                    entity.Id = (Y)TypeDescriptor.GetConverter(typeof(Y)).ConvertFromInvariantString(Guid.NewGuid().ToString());
             }
 
             if (entity is ITableEntity<Y>)
             {
-                (entity as ITableEntity<Y>).CreateBy = userID;
+                (entity as ITableEntity<Y>).CreateBy = userId;
                 (entity as ITableEntity<Y>).CreateDT = DateTime.Now;
             }
 
-            uow.Repository<D>().Add(entity);
-
-            if (isCommit)
-                await uow.SaveChangesAsync();
-
-            return new APIResult { Data = entity.ID, Message = Messages.Ok };
+            return entity;
         }
-        public virtual async Task<APIResult> Update(U model, Y? userID = default(Y?), bool isCommit = true, bool checkAuthorize = false)
+        public virtual async Task<D> UpdateMapping(U model, Y userId)
         {
-            D entity = await uow.Repository<D>().GetByID(model.ID);
-
-            if (entity == null)
-                return new APIResult() { Data = model.ID, Message = Messages.GNE0001 };
+            D entity = await _uow.Repository<D>().GetById(model.Id);
 
             if (entity is ITableEntity<Y>)
             {
-                ///Access Control
-                if (userID != null && checkAuthorize)
-                {
-                    if (!(entity as ITableEntity<Y>).CreateBy.Equals(userID.Value))
-                        return new APIResult() { Data = model.ID, Message = Messages.GNW0001 };
-                }
-
                 (entity as ITableEntity<Y>).UpdateDT = DateTime.Now;
-                (entity as ITableEntity<Y>).UpdateBy = userID.Value;
+                (entity as ITableEntity<Y>).UpdateBy = userId;
             }
 
             Mapper.Map(model, entity);
 
-            if (isCommit)
-                await uow.SaveChangesAsync();
-
-            return new APIResult() { Data = entity.ID, Message = Messages.Ok };
+            return entity;
         }
-        public virtual async Task<APIResult> Delete(Y id, Y? userID = default(Y?), bool isCommit = true, bool checkAuthorize = false)
+        public virtual async Task<APIResult> Add(A model, Y userId, bool isCommit = true)
         {
-            D entity = await uow.Repository<D>().GetByID(id);
+            D entity = AddMapping(model, userId);
+
+            _uow.Repository<D>().Add(entity);
+
+            if (isCommit)
+                await _uow.SaveChangesAsync();
+
+            return new APIResult { Data = entity.Id, Message = Messages.Ok };
+        }
+        public virtual async Task<APIResult> Update(U model, Y userId, bool isCommit = true, bool checkAuthorize = false)
+        {
+            D entity = await UpdateMapping(model, userId);
+
+            if (entity is ITableEntity<Y> && checkAuthorize)
+                if (!(entity as ITableEntity<Y>).CreateBy.Equals(userId))
+                    return new APIResult() { Data = model.Id, Message = Messages.GNW0001 };
+
+            if (entity == null)
+                return new APIResult() { Data = model.Id, Message = Messages.GNE0001 };
+
+            if (isCommit)
+                await _uow.SaveChangesAsync();
+
+            return new APIResult() { Data = entity.Id, Message = Messages.Ok };
+        }
+        public virtual async Task<APIResult> Delete(Y id, Y? userId = default(Y?), bool isCommit = true, bool checkAuthorize = false)
+        {
+            D entity = await _uow.Repository<D>().GetById(id);
 
             if (entity == null)
                 return new APIResult() { Data = id, Message = Messages.GNE0001 };
@@ -104,36 +109,35 @@ namespace RS.Core.Service
             if (entity is ITableEntity<Y>)
             {
                 //Access Control
-                if (userID != null && checkAuthorize)
-                {
-                    if (!(entity as ITableEntity<Y>).CreateBy.Equals(userID.Value))
+                if (userId != null && checkAuthorize)
+                    if (!(entity as ITableEntity<Y>).CreateBy.Equals(userId.Value))
                         return new APIResult() { Message = Messages.GNW0001 };
-                }
 
-                 (entity as ITableEntity<Y>).UpdateDT = DateTime.Now;
-                (entity as ITableEntity<Y>).UpdateBy = userID.Value;
+                (entity as ITableEntity<Y>).UpdateDT = DateTime.Now;
+                (entity as ITableEntity<Y>).UpdateBy = userId.Value;
             }
 
             entity.IsDeleted = true;
 
             if (isCommit)
-                await uow.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
 
             return new APIResult() { Data = id, Message = Messages.Ok };
         }
-        public virtual async Task<C> GetByID(Y id, Y? userID = default(Y?), bool isDeleted = false)
+        public virtual async Task<C> GetById(Y id, Y? userId = default(Y?), bool isDeleted = false)
         {
-            var query = uow.Repository<D>().Query(isDeleted).Equal("ID", id);
+            var query = _uow.Repository<D>().Query(isDeleted)
+                .Equal("Id", id);
 
             //İlgili kaydın, ilgili kullanıcıya ait olma durumunu kontrol etmektedir.
-            if (userID != null)
-                query = query.Equal("CreateBy", userID.Value);
+            if (userId != null)
+                query = query.Equal("CreateBy", userId.Value);
 
             return await query.ProjectTo<C>().FirstOrDefaultAsync();
         }
         public virtual IQueryable<D> PrepareGetQuery(P parameters)
         {
-            var query = uow.Repository<D>().Query();
+            var query = _uow.Repository<D>().Query();
 
             var properties = typeof(P).GetProperties()
                 .Select(s => new
@@ -249,12 +253,12 @@ namespace RS.Core.Service
             if (parameters != null)
                 query = PrepareGetQuery(parameters).ProjectTo<AutoCompleteList<Y>>().AsQueryable();
             else
-                query = uow.Repository<D>().Query().ProjectTo<AutoCompleteList<Y>>().AsQueryable();
+                query = _uow.Repository<D>().Query().ProjectTo<AutoCompleteList<Y>>().AsQueryable();
 
             var pkType = default(Y);
 
             if ((pkType is Guid && !(id as Guid?).IsNullOrEmpty()) || id != null)
-                query = query.Where(x => (object)x.ID == (object)id);
+                query = query.Where(x => (object)x.Id == (object)id);
 
             if (text != null)
                 query = query.Where(x => x.Search.Contains(text));

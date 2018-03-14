@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using RS.Core.Domain;
 using RS.Core.Lib;
 using RS.Core.Service.DTOs;
 using System;
@@ -15,40 +16,40 @@ namespace RS.Core.Service
 {
     public interface IFileService
     {
-        Task Add(IList<FileDto> modelList, Guid userID, bool isCommit = true);
+        Task Add(IList<FileDto> modelList, Guid userId, bool isCommit = true);
         Task SendCloud(IList<FileDto> modelList, string localPath);
-        Task<IList<FileListDto>> GetList(Guid refID, string screenCode);
-        Task<FileDto> GetByID(Guid id, Guid? userID = null);
+        Task<IList<FileListDto>> GetList(Guid refId, string screenCode);
+        Task<FileDto> GetById(Guid id, Guid? userId = null);
     }
     public class FileService : IFileService
     {
-        private EntityUnitofWork<Guid> uow = null;
-        public FileService(EntityUnitofWork<Guid> _uow)
+        private EntityUnitofWork<Guid> _uow = null;
+        public FileService(EntityUnitofWork<Guid> uow)
         {
-            uow = _uow;
+            _uow = uow;
         }
 
         /// <summary>
         /// The process of registering the file information in the database
         /// </summary>
         /// <param name="entityList"></param>
-        /// <param name="userID"></param>
+        /// <param name="userId"></param>
         /// <param name="isCommit"></param>
         /// <returns></returns>
-        public async Task Add(IList<FileDto> modelList, Guid userID, bool isCommit = true)
+        public async Task Add(IList<FileDto> modelList, Guid userId, bool isCommit = true)
         {
             foreach (var model in modelList)
             {
-                Domain.File entity = Mapper.Map<Domain.File>(model);
-                entity.ID = Guid.NewGuid();
-                entity.CreateBy = userID;
+                SysFile entity = Mapper.Map<Domain.SysFile>(model);
+                entity.Id = Guid.NewGuid();
+                entity.CreateBy = userId;
                 entity.CreateDT = DateTime.Now;
 
-                uow.Repository<Domain.File>().Add(entity);
+                _uow.Repository<SysFile>().Add(entity);
             }
 
             if (isCommit)
-                await uow.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
         }
 
         public Task SendCloud(IList<FileDto> modelList,string localPath)
@@ -77,24 +78,25 @@ namespace RS.Core.Service
             return Task.CompletedTask;
         }
 
-        public async Task<IList<FileListDto>> GetList(Guid refID, string screenCode)
+        public async Task<IList<FileListDto>> GetList(Guid refId, string screenCode)
         {
-            var query = uow.Repository<Domain.File>().Query();
+            var query = _uow.Repository<SysFile>().Query();
 
-            if (!refID.IsNullOrEmpty())
-                query = query.Where(x => x.RefID == refID);
+            if (!refId.IsNullOrEmpty())
+                query = query.Where(x => x.RefId == refId);
             if (screenCode != null)
-                query = query.Where(x => x.ScreenCode==screenCode);
+                query = query.Where(x => x.ScreenCode == screenCode);
 
             return await query.ProjectTo<FileListDto>().ToListAsync();
         }
 
-        public async Task<FileDto> GetByID(Guid id, Guid? userID = null)
+        public async Task<FileDto> GetById(Guid id, Guid? userId = null)
         {
-            var query = uow.Repository<Domain.File>().Query().Where(x => x.ID == id);
+            var query = _uow.Repository<SysFile>().Query()
+                .Where(x => x.Id == id);
 
-            if (!userID.IsNullOrEmpty())
-                query = query.Where(x => x.CreateBy == userID);
+            if (!userId.IsNullOrEmpty())
+                query = query.Where(x => x.CreateBy == userId);
 
             return await query.ProjectTo<FileDto>().FirstOrDefaultAsync();
         }

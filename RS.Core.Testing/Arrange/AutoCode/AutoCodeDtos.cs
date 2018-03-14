@@ -6,13 +6,13 @@ namespace RS.Core.Testing.Arrange
 {
     public static class AutoCodeDtos
     {
-        public static List<AutoCode> InMemoryList()
+        public static List<SysAutoCode> InMemoryList()
         {
-            var autoCodeData = new List<AutoCode>
+            var autoCodeData = new List<SysAutoCode>
             {
-                new AutoCode
+                new SysAutoCode
                 {
-                    ID = Guid.Parse("1e5757c3-2f69-4c5f-918d-2eaa1b478850"),
+                    Id = Guid.Parse("1e5757c3-2f69-4c5f-918d-2eaa1b478850"),
                     CodeFormat="CF-{0}-UT",
                     LastCodeNumber=142,
                     ScreenCode="TSC01",
@@ -20,9 +20,9 @@ namespace RS.Core.Testing.Arrange
                     CreateDT=new DateTime(2017,10,03)
                 },
 
-                new AutoCode
+                new SysAutoCode
                 {
-                    ID = Guid.Parse("ce27647e-8c2f-4aff-8558-eb0337ec59ce"),
+                    Id = Guid.Parse("ce27647e-8c2f-4aff-8558-eb0337ec59ce"),
                     CodeFormat="UT-AY--{0}",
                     LastCodeNumber=1903,
                     ScreenCode="TSC02",

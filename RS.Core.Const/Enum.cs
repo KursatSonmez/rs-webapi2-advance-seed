@@ -8,7 +8,7 @@
     public class Enum
     {
         #region General
-        public enum fooDEnum : byte
+        public enum FooDEnum : byte
         {
             fooOne = 2,
             fooTwo = 3,

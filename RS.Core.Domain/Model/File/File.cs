@@ -8,15 +8,15 @@ namespace RS.Core.Domain
     /// The uploaded files are stored in the project directory and the desired cloud is stored in the server.
     /// An integrated domain structure has been created with all screens for managing uploaded files.
     /// It is sufficient to send the screen code <see cref="Const.ScreenCodes"/> 
-    /// and the ID of the record to see the installed files of the relevant record.
-    /// For downloading, ID of uploaded file should be sent.
+    /// and the Id of the record to see the installed files of the relevant record.
+    /// For downloading, Id of uploaded file should be sent.
     /// </summary>
-    public class File : TableEntity<Guid>
+    public class SysFile : TableEntity<Guid>
     {
         /// <summary>
-        /// The ID of the record that the uploaded file is linked to
+        /// The Id of the record that the uploaded file is linked to
         /// </summary>
-        public Guid RefID { get; set; }
+        public Guid RefId { get; set; }
         /// <summary>
         /// Fixed screen codes
         /// <see cref="Const.ScreenCodes"/>

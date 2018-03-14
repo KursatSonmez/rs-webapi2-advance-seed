@@ -18,17 +18,17 @@ namespace RS.Core.Domain
         public string Email { get; set; }
         public DateTime? LastLoginDate { get; set; }
         [Required]
-        public Guid IdentityUserID { get; set; }
+        public Guid IdentityUserId { get; set; }
 
         ///Custom code is here
 
         //FK
         //AutoCodeLog
-        public virtual ICollection<AutoCodeLog> AutoCodeLogs { get; set; }
+        public virtual ICollection<SysAutoCodeLog> AutoCodeLogs { get; set; }
 
         public User()
         {
-            AutoCodeLogs = new List<AutoCodeLog>();
+            AutoCodeLogs = new List<SysAutoCodeLog>();
         }
     }
 }

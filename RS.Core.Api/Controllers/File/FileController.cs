@@ -27,12 +27,12 @@ namespace RS.Core.Controllers
         }
 
         [Route("Upload"), HttpPost]
-        public async Task<IHttpActionResult> Upload(Guid refID,string screenCode)
+        public async Task<IHttpActionResult> Upload(Guid refId,string screenCode)
         {
             #region Condition
 
             /// Checks whether the parameters are null.
-            if (refID == null || screenCode == null)
+            if (refId == null || screenCode == null)
                 return BadRequest(Messages.FUE0002);
 
             /// Controls whether the screen code is in the <see cref="ScreenCodes"/> class.
@@ -75,7 +75,7 @@ namespace RS.Core.Controllers
 
                     FileDto fileDto = new FileDto
                     {
-                        RefID = refID,
+                        RefId = refId,
                         ScreenCode = screenCode,
                         OriginalName = Path.GetFileNameWithoutExtension(originalName),
                         StorageName = Path.GetFileName(file.LocalFileName),
@@ -89,7 +89,7 @@ namespace RS.Core.Controllers
                 if (useCloud)
                     await fileService.SendCloud(modelList,localPath);
 
-                await fileService.Add(modelList, IdentityClaimsValues.UserID<Guid>());
+                await fileService.Add(modelList, IdentityClaimsValues.UserId<Guid>());
 
                 return Ok(Messages.Ok);
             }
@@ -102,7 +102,7 @@ namespace RS.Core.Controllers
         [Route("Download"), HttpGet]
         public async Task<IHttpActionResult> Download(Guid id)
         {
-            var model = await fileService.GetByID(id);
+            var model = await fileService.GetById(id);
 
             if (model == null)
                 return BadRequest(Messages.GNE0001);
@@ -136,13 +136,13 @@ namespace RS.Core.Controllers
 
         [Route("Get"), HttpGet]
         [ResponseType(typeof(IEnumerable<FileListDto>))]
-        public async Task<IHttpActionResult> GetList(Guid refID, string screenCode)
+        public async Task<IHttpActionResult> GetList(Guid refId, string screenCode)
         {
             /// Controls whether the screen code is in the <see cref="ScreenCodes"/> class.
             if (!typeof(ScreenCodes).GetFields().Any(x => x.Name == screenCode))
                 return BadRequest(Messages.GNW0002);
 
-            var result = await fileService.GetList(refID,screenCode);
+            var result = await fileService.GetList(refId,screenCode);
 
             if (result == null || result.Count <= 0)
                 result = new List<FileListDto>();

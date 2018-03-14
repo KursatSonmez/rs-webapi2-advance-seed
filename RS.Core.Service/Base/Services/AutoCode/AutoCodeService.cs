@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 namespace RS.Core.Service
 {
     public interface IAutoCodeService : IBaseService<AutoCodeAddDto, AutoCodeUpdateDto, AutoCodeGetDto,AutoCodeGetDto,
-        AutoCodeFilterDto,AutoCode, Guid>
+        AutoCodeFilterDto, SysAutoCode, Guid>
     {
-        Task<string> AutoCodeGenerate(string screenCode, Guid userID);
+        Task<string> AutoCodeGenerate(string screenCode, Guid userId);
     }
     public class AutoCodeService : BaseService<AutoCodeAddDto, AutoCodeUpdateDto, AutoCodeGetDto, AutoCodeGetDto,
-        AutoCodeFilterDto, AutoCode, Guid>, IAutoCodeService
+        AutoCodeFilterDto, SysAutoCode, Guid>, IAutoCodeService
     {
-        private IAutoCodeLogService autoCodeLogService = null;
-        public AutoCodeService(EntityUnitofWork<Guid> _uow, IAutoCodeLogService _autoCodeLogService) : base(_uow)
+        private IAutoCodeLogService _autoCodeLogService = null;
+        public AutoCodeService(EntityUnitofWork<Guid> uow, IAutoCodeLogService autoCodeLogService) : base(uow)
         {
-            autoCodeLogService = _autoCodeLogService;
+            _autoCodeLogService = autoCodeLogService;
         }
 
         /// <summary>
@@ -31,7 +31,6 @@ namespace RS.Core.Service
         {
             return codeFormat.Contains("{0}");
         }
-
         /// <summary>
         /// Controls whether the screen code is in the <see cref="ScreenCodes"/> class.
         /// </summary>
@@ -41,8 +40,7 @@ namespace RS.Core.Service
         {
             return typeof(ScreenCodes).GetFields().Any(x => x.Name == screenCode);
         }
-
-        public override Task<APIResult> Add(AutoCodeAddDto model, Guid userID, bool isCommit = true)
+        public override Task<APIResult> Add(AutoCodeAddDto model, Guid userId, bool isCommit = true)
         {
             if (!CheckScreenCode(model.ScreenCode))
                 return Task.FromResult(new APIResult { Message = Messages.GNW0002 });
@@ -50,23 +48,21 @@ namespace RS.Core.Service
             if (!CheckCodeFormat(model.CodeFormat))
                 return Task.FromResult(new APIResult { Message = Messages.ACW0001 });
 
-            return base.Add(model, userID, isCommit);
+            return base.Add(model, userId, isCommit);
         }
-
-        public override Task<APIResult> Update(AutoCodeUpdateDto model, Guid? userID = null, bool isCommit = true, bool checkAuthorize = false)
+        public override Task<APIResult> Update(AutoCodeUpdateDto model, Guid userId, bool isCommit = true, bool checkAuthorize = false)
         {
             if (!CheckCodeFormat(model.CodeFormat))
                 return Task.FromResult(new APIResult { Message = Messages.ACW0001 });
 
-            return base.Update(model, userID, isCommit, checkAuthorize);
+            return base.Update(model, userId, isCommit, checkAuthorize);
         }
-
-        public async Task<string> AutoCodeGenerate(string screenCode, Guid userID)
+        public async Task<string> AutoCodeGenerate(string screenCode, Guid userId)
         {
             string code = null;
 
-            AutoCode entity = await uow.Repository<AutoCode>().Get().
-                FirstOrDefaultAsync(x => x.ScreenCode == screenCode);
+            SysAutoCode entity = await _uow.Repository<SysAutoCode>().Get()
+                .FirstOrDefaultAsync(x => x.ScreenCode == screenCode);
 
             if (entity != null)
             {
@@ -76,15 +72,15 @@ namespace RS.Core.Service
                 entity.LastCodeNumber = lastCodeNumber;
 
                 //Log
-                await autoCodeLogService.Add(new AutoCodeLog
+                await _autoCodeLogService.Add(new SysAutoCodeLog
                 {
                     CodeNumber = lastCodeNumber,
                     CodeGenerationDate = DateTime.Now,
-                    AutoCodeID = entity.ID,
-                    GeneratedBy = userID
+                    AutoCodeId = entity.Id,
+                    GeneratedBy = userId
                 }, false);
 
-                await uow.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
             }
 
             return code;

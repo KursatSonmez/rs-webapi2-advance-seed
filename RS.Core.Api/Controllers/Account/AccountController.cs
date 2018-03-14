@@ -397,7 +397,7 @@ namespace RS.Core.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await userService.Update(model, IdentityClaimsValues.UserID<Guid>());
+            var result = await userService.Update(model, IdentityClaimsValues.UserId<Guid>());
 
             if (result.Message != Messages.Ok)
                 return Content(HttpStatusCode.BadRequest, result);
@@ -434,7 +434,7 @@ namespace RS.Core.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ResetPasswordAsync(model.ID, model.Code, model.NewPassword);
+            IdentityResult result = await UserManager.ResetPasswordAsync(model.Id, model.Code, model.NewPassword);
 
             if (!result.Succeeded)
             {
@@ -447,9 +447,9 @@ namespace RS.Core.Controllers
         // GET api/Account/Get
         [Route("Get"), HttpGet]
         [ResponseType(typeof(IEnumerable<UserListDto>))]
-        public async Task<IHttpActionResult> GetByID(Guid id)
+        public async Task<IHttpActionResult> GetById(Guid id)
         {
-            var result = await userService.GetByID(id);
+            var result = await userService.GetById(id);
 
             if (result == null)
                 return BadRequest(Messages.GNE0001);

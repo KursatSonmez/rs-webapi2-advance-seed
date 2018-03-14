@@ -9,28 +9,31 @@ namespace RS.Core.Service.CustomIdentity
 {
     public class CustomIdentityService
     {
-        protected RSCoreDBContext con; 
-        protected EntityUnitofWork<Guid> uow;
+        protected RSCoreDBContext _con; 
+        protected EntityUnitofWork<Guid> _uow;
         public CustomIdentityService()
         {
-            con = new RSCoreDBContext();
-            uow = new EntityUnitofWork<Guid>(con);
+            _con = new RSCoreDBContext();
+            _uow = new EntityUnitofWork<Guid>(_con);
         }
-        public async Task<Guid> UserID(Guid identityUserID)
+        public async Task<Guid> UserId(Guid identityUserId)
         {
-            return await uow.Repository<User>().Query().Where(x => x.IdentityUserID == identityUserID).
-                Select(us => us.ID).SingleAsync();
+            return await _uow.Repository<User>().Query()
+                .Where(x => x.IdentityUserId == identityUserId)
+                .Select(us => us.Id).SingleAsync();
         }
-        public async Task UpdateLoginDate(Guid identityUserID, bool isCommit = true)
+        public async Task UpdateLoginDate(Guid identityUserId, bool isCommit = true)
         {
-            User userEntity = await uow.Repository<User>().Get().Where(x => x.IdentityUserID == identityUserID).SingleOrDefaultAsync();
+            User userEntity = await _uow.Repository<User>().Get()
+                .Where(x => x.IdentityUserId == identityUserId)
+                .SingleOrDefaultAsync();
 
             if (userEntity != null)
             {
                 userEntity.LastLoginDate = DateTime.Now;
 
                 if (isCommit)
-                    await uow.SaveChangesAsync();
+                    await _uow.SaveChangesAsync();
             }
 
         }

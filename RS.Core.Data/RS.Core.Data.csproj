@@ -50,17 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201709060659058_Core-v.1.0.cs" />
-    <Compile Include="Migrations\201709060659058_Core-v.1.0.Designer.cs">
-      <DependentUpon>201709060659058_Core-v.1.0.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201710031003481_AutoCode.cs" />
-    <Compile Include="Migrations\201710031003481_AutoCode.Designer.cs">
-      <DependentUpon>201710031003481_AutoCode.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201710060826502_File-Migration.cs" />
-    <Compile Include="Migrations\201710060826502_File-Migration.Designer.cs">
-      <DependentUpon>201710060826502_File-Migration.cs</DependentUpon>
+    <Compile Include="Migrations\201803141856219_Core-v.2.0.cs" />
+    <Compile Include="Migrations\201803141856219_Core-v.2.0.Designer.cs">
+      <DependentUpon>201803141856219_Core-v.2.0.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,14 +69,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709060659058_Core-v.1.0.resx">
-      <DependentUpon>201709060659058_Core-v.1.0.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710031003481_AutoCode.resx">
-      <DependentUpon>201710031003481_AutoCode.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710060826502_File-Migration.resx">
-      <DependentUpon>201710060826502_File-Migration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201803141856219_Core-v.2.0.resx">
+      <DependentUpon>201803141856219_Core-v.2.0.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

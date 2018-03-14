@@ -18,10 +18,10 @@ namespace RS.Core.Service.AutoMapper
                 #endregion
 
                 #region AutoCode
-                x.CreateMap<AutoCodeAddDto, AutoCode>();
-                x.CreateMap<AutoCodeUpdateDto, AutoCode>();
-                x.CreateMap<AutoCode, AutoCodeGetDto>();
-                x.CreateMap<AutoCodeLog, AutoCodeLogListDto>().
+                x.CreateMap<AutoCodeAddDto, SysAutoCode>();
+                x.CreateMap<AutoCodeUpdateDto, SysAutoCode>();
+                x.CreateMap<SysAutoCode, AutoCodeGetDto>();
+                x.CreateMap<SysAutoCodeLog, AutoCodeLogListDto>().
                     ForMember(
                         y => y.Code,
                         opt => opt.MapFrom(
@@ -30,8 +30,8 @@ namespace RS.Core.Service.AutoMapper
                 #endregion
 
                 #region File
-                x.CreateMap<FileDto, File>().ReverseMap();
-                x.CreateMap<File, FileListDto>();
+                x.CreateMap<FileDto, SysFile>().ReverseMap();
+                x.CreateMap<SysFile, FileListDto>();
 
                 #endregion
 

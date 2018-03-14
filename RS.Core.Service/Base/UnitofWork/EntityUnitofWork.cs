@@ -10,36 +10,32 @@ namespace RS.Core.Service
     public class EntityUnitofWork<Y> : IDisposable
         where Y:struct
     {
-        private RSCoreDBContext con;
-        public EntityUnitofWork(RSCoreDBContext _con)
+        private RSCoreDBContext _con;
+        public EntityUnitofWork(RSCoreDBContext con)
         {
-            con = _con;
+            _con = con;
         }
         private Dictionary<Type, object> repositories = new Dictionary<Type, object>();
         public IRepository<T,Y> Repository<T>() where T : Entity<Y>
         {
             if (repositories.Keys.Contains(typeof(T)) == true)
-            {
                 return repositories[typeof(T)] as IRepository<T,Y>;
-            }
-            IRepository<T,Y> repository = new EntityRepository<T,Y>(con);
+
+            IRepository<T,Y> repository = new EntityRepository<T,Y>(_con);
             repositories.Add(typeof(T), repository);
             return repository;
         }
         public virtual async Task<int> SaveChangesAsync()
         {
-            return await con.SaveChangesAsync();
+            return await _con.SaveChangesAsync();
         }
         private bool disposed = false;
         public virtual void Dispose(bool disposing)
         {
             if (!disposed)
-            {
                 if (disposing)
-                {
-                    con.Dispose();
-                }
-            }
+                    _con.Dispose();
+
             disposed = true;
         }
         public void Dispose()

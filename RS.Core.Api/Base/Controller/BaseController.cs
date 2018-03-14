@@ -17,10 +17,10 @@ namespace RS.Core.Controllers
         where C : EntityGetDto<Y>
         where S : ICRUDService<A, U, G, C, P, Y>
     {
-        protected S service;
-        public BaseController(S _service)
+        protected S _service;
+        public BaseController(S service)
         {
-            service = _service;
+            _service = service;
         }
         [Route("Add"), HttpPost]
         public virtual async Task<IHttpActionResult> Add(A model)
@@ -30,8 +30,8 @@ namespace RS.Core.Controllers
                 return BadRequest(ModelState);
 
             ///Generic olarak gelen servisin Add metoduna ilgili dto ve
-            ///token bilgisini okuyarak elde edilen, User ID gönderilmiştir.
-            var result = await service.Add(model, IdentityClaimsValues.UserID<Y>());
+            ///token bilgisini okuyarak elde edilen, User Id gönderilmiştir.
+            var result = await _service.Add(model, IdentityClaimsValues.UserId<Y>());
 
             ///Kayıt işleminin sonucunu kontrol eder.
             if (result.Message != Messages.Ok)
@@ -47,8 +47,8 @@ namespace RS.Core.Controllers
                 return BadRequest(ModelState);
 
             ///Generic olan gelen servisin Update metoduna ilgili view model 
-            ///ve token bilgisini okuyarak elde edilen User ID gönderilmiştir.
-            var result = await service.Update(model, IdentityClaimsValues.UserID<Y>());
+            ///ve token bilgisini okuyarak elde edilen User Id gönderilmiştir.
+            var result = await _service.Update(model, IdentityClaimsValues.UserId<Y>());
 
             ///Update işleminin sonucunu kontrol eder.
             if (result.Message != Messages.Ok)
@@ -60,8 +60,8 @@ namespace RS.Core.Controllers
         public virtual async Task<IHttpActionResult> Delete(Y id)
         {
             ///Generic olan gelen servisin Delete metoduna ilgili id
-            ///ve token bilgisini okuyarak elde edilen User ID gönderilmiştir.
-            var result = await service.Delete(id, IdentityClaimsValues.UserID<Y>());
+            ///ve token bilgisini okuyarak elde edilen User Id gönderilmiştir.
+            var result = await _service.Delete(id, IdentityClaimsValues.UserId<Y>());
 
             ///Delete işleminin sonucunu kontrol eder.
             if (result.Message != Messages.Ok)
@@ -70,9 +70,9 @@ namespace RS.Core.Controllers
             return Ok(result);
         }
         [Route("Get"), HttpGet]
-        public virtual async Task<IHttpActionResult> GetByID(Y id)
+        public virtual async Task<IHttpActionResult> GetById(Y id)
         {
-            var result = await service.GetByID(id);
+            var result = await _service.GetById(id);
 
             if (result == null)
                 return BadRequest(Messages.GNE0001);
@@ -86,7 +86,7 @@ namespace RS.Core.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await service.AutoCompleteList(parameters, id, text);
+            var result = await _service.AutoCompleteList(parameters, id, text);
 
             if (result == null)
                 return Content(HttpStatusCode.OK, new string[0]);
@@ -99,7 +99,7 @@ namespace RS.Core.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await service.Get(parameters, sortField, sortOrder);
+            var result = await _service.Get(parameters, sortField, sortOrder);
 
             if (result == null)
                 result = new List<G>();
@@ -113,7 +113,7 @@ namespace RS.Core.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await service.GetPaging(parameters, sortField, sortOrder, sumField, first, rows);
+            var result = await _service.GetPaging(parameters, sortField, sortOrder, sumField, first, rows);
 
             if (result == null)
                 result = new EntityGetPagingDto<Y, G>();

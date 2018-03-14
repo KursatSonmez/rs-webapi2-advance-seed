@@ -21,10 +21,10 @@ namespace RS.Core.Service
             set { con = value; }
 
         }
-        public virtual async Task<T> GetByID(Y id, bool isDeleted=false)
+        public virtual async Task<T> GetById(Y id, bool isDeleted=false)
         {
             return await con.Set<T>()
-                .Equal("ID", id)
+                .Equal("Id", id)
                 .Where(x => x.IsDeleted == isDeleted)
                 .FirstOrDefaultAsync();
         } 

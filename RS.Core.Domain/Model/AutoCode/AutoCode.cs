@@ -12,7 +12,7 @@ namespace RS.Core.Domain
     /// the corresponding service is triggered and the automatic code is generated before
     /// the 'post' operation is performed on the code format defined screen.
     /// </summary>
-    public class AutoCode : TableEntity<Guid>
+    public class SysAutoCode : TableEntity<Guid>
     {
         /// <summary>
         /// Fixed screen codes
@@ -29,11 +29,11 @@ namespace RS.Core.Domain
 
         //FK
         //AutoCodeLog
-        public virtual ICollection<AutoCodeLog> AutoCodeLogs { get; set; }
+        public virtual ICollection<SysAutoCodeLog> AutoCodeLogs { get; set; }
 
-        public AutoCode()
+        public SysAutoCode()
         {
-            AutoCodeLogs = new List<AutoCodeLog>();
+            AutoCodeLogs = new List<SysAutoCodeLog>();
         }
     }
 }

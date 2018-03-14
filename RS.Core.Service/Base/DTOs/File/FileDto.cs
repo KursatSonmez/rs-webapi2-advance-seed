@@ -6,9 +6,9 @@ namespace RS.Core.Service.DTOs
     public class FileDto
     {
         /// <summary>
-        /// The ID of the record that the uploaded file is linked to
+        /// The Id of the record that the uploaded file is linked to
         /// </summary>
-        public Guid RefID { get; set; }
+        public Guid RefId { get; set; }
         /// <summary>
         /// Fixed screen codes
         /// <see cref="Const.ScreenCodes"/>
@@ -23,7 +23,6 @@ namespace RS.Core.Service.DTOs
         public string Extension { get; set; }
         public long? Size { get; set; }
     }
-
     public class FileListDto:EntityGetDto<Guid>
     {
         public string OriginalName { get; set; }

@@ -14,37 +14,36 @@ namespace RS.Core.Service
     public interface IUserService : IBaseService<UserAddDto, UserUpdateDto, UserListDto,
         UserCardDto, UserFilterDto, User, Guid>
     {
-        Task<APIResult> Register(UserAddDto model, Guid identityUserID);
+        Task<APIResult> Register(UserAddDto model, Guid identityUserId);
         APIResult RemindPassword(string email, string code, string id);
     }
 
     public class UserService : BaseService<UserAddDto, UserUpdateDto, UserListDto,
         UserCardDto, UserFilterDto, User, Guid>, IUserService
     {
-        private IEmailService emailService;
-        public UserService(EntityUnitofWork<Guid> _uow, IEmailService _emailService) : base(_uow)
-        {
-            emailService = _emailService;
-        }
+        private IEmailService _emailService;
 
-        public async Task<APIResult> Register(UserAddDto model, Guid identityUserID)
+        public UserService(EntityUnitofWork<Guid> uow, IEmailService emailService) : base(uow)
         {
-            bool duplicateUserCheck = await uow.Repository<User>().Query().AnyAsync(x => x.Email == model.Email);
+            _emailService = emailService;
+        }
+        public async Task<APIResult> Register(UserAddDto model, Guid identityUserId)
+        {
+            bool duplicateUserCheck = await _uow.Repository<User>().Query().AnyAsync(x => x.Email == model.Email);
             if (duplicateUserCheck)
                 return new APIResult { Message = Messages.GNE0003 };
 
             User entity = Mapper.Map<User>(model);
-            entity.ID = Guid.NewGuid();
-            entity.IdentityUserID = identityUserID;
-            entity.CreateBy = entity.ID;
+            entity.Id = Guid.NewGuid();
+            entity.IdentityUserId = identityUserId;
+            entity.CreateBy = entity.Id;
             entity.CreateDT = DateTime.Now;
 
-            uow.Repository<User>().Add(entity);
-            await uow.SaveChangesAsync();
+            _uow.Repository<User>().Add(entity);
+            await _uow.SaveChangesAsync();
 
-            return new APIResult { Data = entity.ID, Message = Messages.Ok };
+            return new APIResult { Data = entity.Id, Message = Messages.Ok };
         }
-
         public APIResult RemindPassword(string email, string code, string id)
         {
             //Change `mailSettings` in web.config for send email.
@@ -63,7 +62,7 @@ namespace RS.Core.Service
                     URL = ConfigurationManager.AppSettings["resetPasswordUrl"] + "?id=" + id + "?code=" + code
                 };
 
-                emailService.SendMailBasicTemplate(emailModel);
+                _emailService.SendMailBasicTemplate(emailModel);
                 return new APIResult { Message = Messages.Ok };
             }
             catch (Exception ex)
