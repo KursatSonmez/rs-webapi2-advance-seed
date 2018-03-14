@@ -460,9 +460,10 @@ namespace RS.Core.Controllers
         // GET api/Account/Get
         [Route("Get"), HttpGet]
         [ResponseType(typeof(IEnumerable<UserListDto>))]
-        public async Task<IHttpActionResult> GetList(string name = null, string email = null)
+        public async Task<IHttpActionResult> Get([FromUri]UserFilterDto model,
+            string sortField, bool sortOrder)
         {
-            var result = await userService.GetList(name, email);
+            var result = await userService.Get(model, sortField, sortOrder);
 
             if (result == null || result.Count <= 0)
                 result = new List<UserListDto>();
@@ -470,11 +471,12 @@ namespace RS.Core.Controllers
             return Ok(result);
         }
 
-        // GET api/Account/GetSelectList
-        [Route("GetSelectList"), HttpGet]
-        public async Task<IHttpActionResult> AutoCompleteList(Guid? id = null, string text = null)
+        // GET api/Account/AutoCompleteList
+        [Route("AutoCompleteList"), HttpGet]
+        public async Task<IHttpActionResult> AutoCompleteList([FromUri]UserFilterDto model, 
+            Guid? id = null, string text = null)
         {
-            var result = await userService.AutoCompleteList(id, text);
+            var result = await userService.AutoCompleteList(model, id, text);
 
             if (result == null)
                 return Content(HttpStatusCode.OK, new string[0]);

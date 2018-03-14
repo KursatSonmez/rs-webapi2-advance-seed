@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RS.Core.Lib;
+using System;
 using System.ComponentModel.DataAnnotations;
+using static RS.Core.Const.Enum;
 
 namespace RS.Core.Service.DTOs
 {
@@ -41,6 +43,17 @@ namespace RS.Core.Service.DTOs
     {
         public string Name { get; set; }
         public string Phone { get; set; }
+        public string Email { get; set; }
+
+        ///Custom code is here
+    }
+    public class UserFilterDto
+    {
+        [RSFilter(SearchType.Contains)]
+        public string Name { get; set; }
+        [RSFilter(SearchType.Contains)]
+        public string Phone { get; set; }
+        [RSFilter(SearchType.Contains)]
         public string Email { get; set; }
 
         ///Custom code is here

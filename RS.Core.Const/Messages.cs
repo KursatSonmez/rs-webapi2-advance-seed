@@ -12,14 +12,17 @@
         #region General
 
         #region Success
+
         /// <summary>
         /// İşlem başarılı
         /// - Status Code: Ok
         /// </summary>
         public static string Ok = "Ok";
+
         #endregion Success
 
         #region Error
+
         /// <summary>
         /// Kayıt bulunamadı 
         /// - Status Code: NotFound
@@ -43,9 +46,11 @@
         /// - Status Code: BadRequest
         /// </summary>
         public static string GNE0004 = "GNE0004";
+
         #endregion Error
 
         #region Warning
+
         /// <summary>
         /// Bu işlemi yapmak için yetki sahibi değilsiniz 
         /// - Status Code: Unauthorized
@@ -57,6 +62,13 @@
         /// - Status Code: NotFound
         /// </summary>
         public static string GNW0002 = "GNW0002";
+
+        /// <summary>
+        /// Sıralanmak istenilen alan bulunamadı.
+        /// - Status Code: NotFound
+        /// </summary>
+        public static string GNW0003 = "GNW0003";
+
         #endregion Warning
 
         #endregion General

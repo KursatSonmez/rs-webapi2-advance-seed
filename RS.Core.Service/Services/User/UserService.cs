@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using RS.Core.Const;
 using RS.Core.Domain;
 using RS.Core.Lib.Email;
@@ -8,19 +7,19 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RS.Core.Service
 {
-    public interface IUserService : IBaseService<UserAddDto, UserUpdateDto, UserCardDto, User, Guid>
+    public interface IUserService : IBaseService<UserAddDto, UserUpdateDto, UserListDto,
+        UserCardDto, UserFilterDto, User, Guid>
     {
         Task<APIResult> Register(UserAddDto model, Guid identityUserID);
         APIResult RemindPassword(string email, string code, string id);
-        Task<IList<UserListDto>> GetList(string name = null, string email = null);
     }
 
-    public class UserService : BaseService<UserAddDto, UserUpdateDto, UserCardDto, User, Guid>, IUserService
+    public class UserService : BaseService<UserAddDto, UserUpdateDto, UserListDto,
+        UserCardDto, UserFilterDto, User, Guid>, IUserService
     {
         private IEmailService emailService;
         public UserService(EntityUnitofWork<Guid> _uow, IEmailService _emailService) : base(_uow)
@@ -71,18 +70,6 @@ namespace RS.Core.Service
             {
                 return new APIResult { Message = ex.Message };
             }
-        }
-
-        public async Task<IList<UserListDto>> GetList(string name = null, string email = null)
-        {
-            var query = uow.Repository<User>().Query();
-
-            if (name != null)
-                query = query.Where(x => x.Name.Contains(name));
-            if (email != null)
-                query = query.Where(x => x.Email.Contains(email));
-
-            return await query.ProjectTo<UserListDto>().ToListAsync();
         }
     }
 }

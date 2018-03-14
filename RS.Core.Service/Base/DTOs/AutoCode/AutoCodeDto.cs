@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RS.Core.Lib;
+using System;
 using System.ComponentModel.DataAnnotations;
+using static RS.Core.Const.Enum;
 
 namespace RS.Core.Service.DTOs
 {
@@ -27,7 +29,12 @@ namespace RS.Core.Service.DTOs
     }
     public class AutoCodeGetDto:EntityGetDto<Guid>
     {
-        public string ScreenCode { get; set; }
+        public string IScreenCode { get; set; }
         public string CodeFormat { get; set; }
+    }
+    public class AutoCodeFilterDto
+    {
+        [RSFilter(SearchType.Contains)]
+        public string ScreenCode { get; set; }
     }
 }

@@ -1,21 +1,20 @@
-﻿using AutoMapper.QueryableExtensions;
-using RS.Core.Const;
+﻿using RS.Core.Const;
 using RS.Core.Domain;
 using RS.Core.Service.DTOs;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace RS.Core.Service
 {
-    public interface IAutoCodeService:IBaseService<AutoCodeAddDto,AutoCodeUpdateDto,AutoCodeGetDto,AutoCode,Guid>
+    public interface IAutoCodeService : IBaseService<AutoCodeAddDto, AutoCodeUpdateDto, AutoCodeGetDto,AutoCodeGetDto,
+        AutoCodeFilterDto,AutoCode, Guid>
     {
-        Task<IList<AutoCodeGetDto>> GetList(string screenCode = null);
         Task<string> AutoCodeGenerate(string screenCode, Guid userID);
     }
-    public class AutoCodeService : BaseService<AutoCodeAddDto, AutoCodeUpdateDto, AutoCodeGetDto, AutoCode, Guid>, IAutoCodeService
+    public class AutoCodeService : BaseService<AutoCodeAddDto, AutoCodeUpdateDto, AutoCodeGetDto, AutoCodeGetDto,
+        AutoCodeFilterDto, AutoCode, Guid>, IAutoCodeService
     {
         private IAutoCodeLogService autoCodeLogService = null;
         public AutoCodeService(EntityUnitofWork<Guid> _uow, IAutoCodeLogService _autoCodeLogService) : base(_uow)
@@ -62,23 +61,13 @@ namespace RS.Core.Service
             return base.Update(model, userID, isCommit, checkAuthorize);
         }
 
-        public async Task<IList<AutoCodeGetDto>> GetList(string screenCode = null)
-        {
-            var query = uow.Repository<AutoCode>().Query();
-
-            if (screenCode != null)
-                query = query.Where(x => x.ScreenCode.Contains(screenCode));
-
-            return await query.ProjectTo<AutoCodeGetDto>().ToListAsync();
-        }
-
         public async Task<string> AutoCodeGenerate(string screenCode, Guid userID)
         {
             string code = null;
 
             AutoCode entity = await uow.Repository<AutoCode>().Get().
                 FirstOrDefaultAsync(x => x.ScreenCode == screenCode);
-                
+
             if (entity != null)
             {
                 int lastCodeNumber = ++entity.LastCodeNumber;
@@ -89,7 +78,7 @@ namespace RS.Core.Service
                 //Log
                 await autoCodeLogService.Add(new AutoCodeLog
                 {
-                    CodeNumber= lastCodeNumber,
+                    CodeNumber = lastCodeNumber,
                     CodeGenerationDate = DateTime.Now,
                     AutoCodeID = entity.ID,
                     GeneratedBy = userID

@@ -1,6 +1,8 @@
 ﻿using RS.Core.Const;
 using RS.Core.Service;
 using RS.Core.Service.DTOs;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -8,11 +10,12 @@ using System.Web.Http;
 namespace RS.Core.Controllers
 {
     [Authorize]
-    public class BaseController<A, U, G, Y, S> : ApiController
+    public class BaseController<A, U, G, C, P, Y, S> : ApiController
         where Y : struct
         where U : EntityUpdateDto<Y>
         where G : EntityGetDto<Y>
-        where S : ICRUDService<A, U, G, Y>
+        where C : EntityGetDto<Y>
+        where S : ICRUDService<A, U, G, C, P, Y>
     {
         protected S service;
         public BaseController(S _service)
@@ -76,13 +79,44 @@ namespace RS.Core.Controllers
 
             return Ok(result);
         }
-        [Route("GetSelectList"),HttpGet]
-        public virtual async Task<IHttpActionResult> AutoCompleteList(Y? id = default(Y?), string text = default(string))
+        [Route("AutoCompleteList"), HttpGet]
+        public virtual async Task<IHttpActionResult> AutoCompleteList([FromUri]P parameters,
+            Y? id = default(Y?), string text = default(string))
         {
-            var result = await service.AutoCompleteList(id, text);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await service.AutoCompleteList(parameters, id, text);
 
             if (result == null)
                 return Content(HttpStatusCode.OK, new string[0]);
+
+            return Ok(result);
+        }
+        [Route("Get"), HttpGet]
+        public async Task<IHttpActionResult> Get([FromUri]P parameters, string sortField, bool sortOrder)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await service.Get(parameters, sortField, sortOrder);
+
+            if (result == null)
+                result = new List<G>();
+
+            return Ok(result);
+        }
+        [Route("GetPaging"), HttpGet]
+        public async Task<IHttpActionResult> GetPaging([FromUri]P parameters,
+            string sortField, bool sortOrder, string sumField, int? first = null, int? rows = null)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await service.GetPaging(parameters, sortField, sortOrder, sumField, first, rows);
+
+            if (result == null)
+                result = new EntityGetPagingDto<Y, G>();
 
             return Ok(result);
         }

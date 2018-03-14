@@ -23,10 +23,10 @@ namespace RS.Core.Service
         }
         public virtual async Task<T> GetByID(Y id, bool isDeleted=false)
         {
-            return await con.Set<T>().
-                Where(Predicate.Equal<T,Y>("ID",id)).
-                Where(x=>x.IsDeleted==isDeleted).
-                FirstOrDefaultAsync();
+            return await con.Set<T>()
+                .Equal("ID", id)
+                .Where(x => x.IsDeleted == isDeleted)
+                .FirstOrDefaultAsync();
         } 
         public IQueryable<T> Get(bool isDeleted = false)
         {
@@ -40,6 +40,5 @@ namespace RS.Core.Service
         {
             con.Set<T>().Add(entity);
         }
-    
     }
 }

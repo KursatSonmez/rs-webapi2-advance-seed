@@ -98,12 +98,13 @@
     <Compile Include="AutoMapper\AutoMapperConfig.cs" />
     <Compile Include="Base\DTOs\AutoCode\AutoCodeDto.cs" />
     <Compile Include="Base\DTOs\AutoCode\AutoCodeLogDto.cs" />
+    <Compile Include="Base\DTOs\Entity\EntityGetPagingDto.cs" />
     <Compile Include="Base\DTOs\File\FileDto.cs" />
     <Compile Include="Base\DTOs\Result\APIResult.cs" />
     <Compile Include="Base\Services\AutoCode\AutoCodeService.cs" />
     <Compile Include="Base\Services\AutoCode\AutoCodeLogService.cs" />
     <Compile Include="Base\Services\Entity\BaseService.cs" />
-    <Compile Include="Base\Services\Entity\Predicate.cs" />
+    <Compile Include="Base\Services\Entity\RSPredicate.cs" />
     <Compile Include="Base\Services\Entity\ICRUDService.cs" />
     <Compile Include="Base\Services\File\FileService.cs" />
     <Compile Include="CustomIdentity\CustomIdentityService.cs" />
